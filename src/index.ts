@@ -100,7 +100,7 @@ export default class GCSignalRClient {
         } else {
             guessId = await this.connection.invoke("SendGuessToClients", guess)
         }
-        if (!checkGuess)  
+        if (!checkGuess) return 
         if (typeof guessId === "number"){
         let state: GuessState = await this.#getGuessState(guessId)
               // 50 might be to much
