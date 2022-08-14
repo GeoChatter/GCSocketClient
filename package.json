@@ -63,5 +63,8 @@
   },
   "overrides": {
     "semver-regex": "3.1.4"
+  },
+  "dependencies": {
+    "@microsoft/signalr": "^6.0.8"
   }
 }
