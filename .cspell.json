@@ -6,6 +6,7 @@
     "esbuild",
     "GCSocketClient",
     "octocat",
+    "onreconnecting",
     "rmrf",
     "socio"
   ],

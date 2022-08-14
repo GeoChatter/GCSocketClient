@@ -1,3 +1,9 @@
+/**
+ * It matches the Errors and creates a better string 
+ * I removed all successful results from it.
+ * @param {GuessState} status - The status of the guess.
+ * @returns A string
+ */
 
 
 export function createErrorText(status: GuessState): string
