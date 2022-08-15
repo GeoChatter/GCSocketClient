@@ -101,12 +101,14 @@ export default class GCSignalRClient {
      * server and then gets the streamer settings from the server as a response.
      */
     async #logInToMap() {
-        const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode))
+        const res: unknown = await this.connection.invoke("MapLogin", this.streamerCode)
+        const streamerSettingsRes = StreamerSettings.safeParse(res)
         if (streamerSettingsRes.success) {
             this.#setStreamerSettings(streamerSettingsRes.data)
         }
         else {
-            console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error)
+            console.error("map log in" , streamerSettingsRes.error)
+            console.log(res)
         }
     }
 
@@ -149,11 +151,13 @@ export default class GCSignalRClient {
         }
 
         await this.connection.start()
-        const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode))
+        const res:unknown = await this.connection.invoke("MapLogin", this.streamerCode)
+        const streamerSettingsRes = StreamerSettings.safeParse(res)
         if (streamerSettingsRes.success) {
             this.#setStreamerSettings(streamerSettingsRes.data)
         } else {
-            console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error)
+            console.error("got a weird response from map login check if you need to update gcsocketlibrary",  streamerSettingsRes.error)
+            console.log(res)
         }
     }
 
@@ -210,6 +214,7 @@ export default class GCSignalRClient {
             await this.connection.invoke("SendFlagToClients",)
         } else {
             console.error(flagParseRes.error)
+            console.log(data)
         }
     }
 
@@ -224,6 +229,7 @@ export default class GCSignalRClient {
         }
         else {
             console.error(ColorParseRes.error)
+            console.log(data)
         }
     }
 

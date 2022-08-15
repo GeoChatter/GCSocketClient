@@ -78,11 +78,13 @@ class GCSignalRClient {
     }
   }
   async #logInToMap() {
-    const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode));
+    const res = await this.connection.invoke("MapLogin", this.streamerCode);
+    const streamerSettingsRes = StreamerSettings.safeParse(res);
     if (streamerSettingsRes.success) {
       this.#setStreamerSettings(streamerSettingsRes.data);
     } else {
-      console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error);
+      console.error("map log in", streamerSettingsRes.error);
+      console.log(res);
     }
   }
   #listenToStreamerSettings() {
@@ -107,11 +109,13 @@ class GCSignalRClient {
       console.warn("calling reconnect without streamer code");
     }
     await this.connection.start();
-    const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode));
+    const res = await this.connection.invoke("MapLogin", this.streamerCode);
+    const streamerSettingsRes = StreamerSettings.safeParse(res);
     if (streamerSettingsRes.success) {
       this.#setStreamerSettings(streamerSettingsRes.data);
     } else {
       console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error);
+      console.log(res);
     }
   }
   async sendGuess(guess, checkGuess = true) {
@@ -154,6 +158,7 @@ class GCSignalRClient {
       await this.connection.invoke("SendFlagToClients");
     } else {
       console.error(flagParseRes.error);
+      console.log(data);
     }
   }
   async sendColor(data) {
@@ -162,6 +167,7 @@ class GCSignalRClient {
       await this.connection.invoke("SendColorToClients", ColorParseRes.data);
     } else {
       console.error(ColorParseRes.error);
+      console.log(data);
     }
   }
   async #getGuessState(id) {
