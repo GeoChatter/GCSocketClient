@@ -1,40 +1,43 @@
+import z from "zod"
+export const SendingBase = z.object(
+    {
+        bot: z.string(),
+        tkn: z.string(),
+        id: z.string(),
+        name: z.string(),
+        sourcePlatform: z.enum(["YouTube", "Twitch"]),
+        display: z.string(),
+        pic: z.string(),
+    }
+)
 
-interface SendingBase {
-    bot: string;
-    tkn: string;
-    id: string;
-    name: string;
-    sourcePlatform: "YouTube" | "Twitch"
-    display: string;
-    pic: string;
-}
-
-export interface Guess extends SendingBase {
-    lat: string;
-    lng: string;
-    isTemporary: boolean;
-    isRandom: boolean;
-};
-
-
-export interface Flag extends SendingBase {
-    flag: string;
-};
+export const Guess = SendingBase.extend( {
+    lat: z.string(),
+    lng: z.string(),
+    isTemporary: z.boolean(),
+    isRandom: z.boolean(),
+});
 
 
-export interface Color extends SendingBase  {
-    color: string
-};
+export const Flag =  SendingBase.extend( {
+    flag: z.string()
+});
+
+
+export const  Color = SendingBase.extend(  {
+    color: z.string()
+});
 
 // TODO: add all settings and maybe with show option
-export type StreamerSettings = {
-    borders: boolean,
-    flags: boolean,
-    streamOverlay: boolean,
-    borderAdmin: boolean,
-    temporaryGuesses: boolean,
-    streamer: string
-}
+export const StreamerSettings = z.object(  {
+    borders: z.boolean(),
+    flags: z.boolean(),
+    streamOverlay: z.boolean(),
+    borderAdmin: z.boolean(),
+    temporaryGuesses: z.boolean(),
+    streamer: z.string()
+})
+
  export const enum GuessState
     { 
         /** State for recently submitted guess */

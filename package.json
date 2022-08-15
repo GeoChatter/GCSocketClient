@@ -65,6 +65,7 @@
     "semver-regex": "3.1.4"
   },
   "dependencies": {
-    "@microsoft/signalr": "^6.0.8"
+    "@microsoft/signalr": "^6.0.8",
+    "zod": "^3.18.0"
   }
 }
