@@ -34,7 +34,7 @@ vi.mock("@microsoft/signalr", () => {
 describe("init", () => {
   describe("starting GCSignalRClient", () => {
     const onStreamerSettings = vi.fn()
-    const client = new GCSignalRClient("https://google.com/","code", {
+    const client = new GCSignalRClient("https://dev.geochatter.tv/guess/geoChatterHub","code", {
       onStreamerSettings
     })
 

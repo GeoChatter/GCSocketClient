@@ -36,11 +36,15 @@ class GCSignalRClient {
   _streamerCode;
   running = false;
   constructor(url, streamerCode, listeners) {
-    import_zod.z.string().url().parse(url);
-    this.connection = new signalR.HubConnectionBuilder().withUrl(url, {}).build();
-    this._streamerCode = streamerCode;
-    this.listeners = listeners;
-    this.#start();
+    const result = import_zod.z.string().url().safeParse(url);
+    if (result.success) {
+      this.connection = new signalR.HubConnectionBuilder().withUrl(result.data, {}).build();
+      this._streamerCode = streamerCode;
+      this.listeners = listeners;
+      this.#start();
+    } else {
+      throw result.error;
+    }
   }
   set streamerCode(streamerCode) {
     if (!streamerCode) {
@@ -74,8 +78,12 @@ class GCSignalRClient {
     }
   }
   async #logInToMap() {
-    const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
-    this.#setStreamerSettings(streamerSettings);
+    const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode));
+    if (streamerSettingsRes.success) {
+      this.#setStreamerSettings(streamerSettingsRes.data);
+    } else {
+      console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error);
+    }
   }
   #listenToStreamerSettings() {
     this.connection.on("SetMapFeatures", (streamerSettings) => {
@@ -99,8 +107,12 @@ class GCSignalRClient {
       console.warn("calling reconnect without streamer code");
     }
     await this.connection.start();
-    const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
-    this.#setStreamerSettings(streamerSettings);
+    const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode));
+    if (streamerSettingsRes.success) {
+      this.#setStreamerSettings(streamerSettingsRes.data);
+    } else {
+      console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error);
+    }
   }
   async sendGuess(guess, checkGuess = true) {
     let guessId;
@@ -137,10 +149,20 @@ class GCSignalRClient {
     }
   }
   async sendFlag(data) {
-    await this.connection.invoke("SendFlagToClients", Flag.parse(data));
+    const flagParseRes = Flag.safeParse(data);
+    if (flagParseRes.success) {
+      await this.connection.invoke("SendFlagToClients");
+    } else {
+      console.error(flagParseRes.error);
+    }
   }
   async sendColor(data) {
-    await this.connection.invoke("SendColorToClients", Color.parse(data));
+    const ColorParseRes = Color.safeParse(data);
+    if (ColorParseRes.success) {
+      await this.connection.invoke("SendColorToClients", ColorParseRes.data);
+    } else {
+      console.error(ColorParseRes.error);
+    }
   }
   async #getGuessState(id) {
     return await this.connection.invoke("GetGuessState", id);
