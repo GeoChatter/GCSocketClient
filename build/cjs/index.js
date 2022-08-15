@@ -29,8 +29,6 @@ __export(src_exports, {
 module.exports = __toCommonJS(src_exports);
 var signalR = __toESM(require("@microsoft/signalr"));
 var import_zod = require("zod");
-var import_helpers = require("./helpers.js");
-var import_types = require("./types.js");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;
@@ -76,7 +74,7 @@ class GCSignalRClient {
     }
   }
   async #logInToMap() {
-    const streamerSettings = import_types.StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
+    const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
     this.#setStreamerSettings(streamerSettings);
   }
   #listenToStreamerSettings() {
@@ -101,7 +99,7 @@ class GCSignalRClient {
       console.warn("calling reconnect without streamer code");
     }
     await this.connection.start();
-    const streamerSettings = import_types.StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
+    const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode));
     this.#setStreamerSettings(streamerSettings);
   }
   async sendGuess(guess, checkGuess = true) {
@@ -134,20 +132,104 @@ class GCSignalRClient {
       if (state === "Success" || state === "TempSuccess") {
         this.listeners?.onSuccessfulGuess?.();
       } else {
-        this.listeners?.onFailedGuess?.(state, (0, import_helpers.createErrorText)(state));
+        this.listeners?.onFailedGuess?.(state, createErrorText(state));
       }
     }
   }
   async sendFlag(data) {
-    await this.connection.invoke("SendFlagToClients", import_types.Flag.parse(data));
+    await this.connection.invoke("SendFlagToClients", Flag.parse(data));
   }
   async sendColor(data) {
-    await this.connection.invoke("SendColorToClients", import_types.Color.parse(data));
+    await this.connection.invoke("SendColorToClients", Color.parse(data));
   }
   async #getGuessState(id) {
     return await this.connection.invoke("GetGuessState", id);
   }
 }
+function createErrorText(status) {
+  switch (status) {
+    case GuessState.Banned: {
+      return "You are banned by the streamer and not allowed participate in any games.";
+    }
+    case GuessState.BotNotFound: {
+      return "Bot not found";
+    }
+    case GuessState.GuessedAlready: {
+      return "Already sent a guess for the round!";
+    }
+    case GuessState.InvalidCoordinates: {
+      return "Invalid coordinates. Refresh the page.";
+    }
+    case GuessState.NoGame: {
+      return "No ongoing game found, try again later.";
+    }
+    case GuessState.NotFound: {
+      return "Invalid user data. Refresh the page.";
+    }
+    case GuessState.SameCoordinates: {
+      return "Failed to send same guess back to back.";
+    }
+    case GuessState.TooFast: {
+      return "Sending guesses too fast, try guessing again.";
+    }
+    case GuessState.UndefinedError: {
+      return "Server error. Try guessing again.";
+    }
+    case GuessState.Unknown: {
+      return "Invalid guess id. Refresh the page.";
+    }
+    default: {
+      return "Something went wrong. Try guessing again.";
+    }
+  }
+}
+var GuessState = /* @__PURE__ */ ((GuessState2) => {
+  GuessState2["Submitted"] = "Submitted";
+  GuessState2["Success"] = "Success";
+  GuessState2["NoGame"] = "NoGame";
+  GuessState2["TempSuccess"] = "TempSuccess";
+  GuessState2["NotFound"] = "NotFound";
+  GuessState2["Banned"] = "Banned";
+  GuessState2["GuessedAlready"] = "GuessedAlready";
+  GuessState2["TooFast"] = "TooFast";
+  GuessState2["InvalidCoordinates"] = "InvalidCoordinates";
+  GuessState2["SameCoordinates"] = "SameCoordinates";
+  GuessState2["UndefinedError"] = "UndefinedError";
+  GuessState2["BotNotFound"] = "BotNotFound";
+  GuessState2["Unknown"] = "Unknown";
+  return GuessState2;
+})(GuessState || {});
+const SendingBase = import_zod.z.object(
+  {
+    bot: import_zod.z.string(),
+    tkn: import_zod.z.string(),
+    id: import_zod.z.string(),
+    name: import_zod.z.string(),
+    sourcePlatform: import_zod.z.enum(["YouTube", "Twitch"]),
+    display: import_zod.z.string(),
+    pic: import_zod.z.string()
+  }
+);
+const Guess = SendingBase.extend({
+  lat: import_zod.z.string(),
+  lng: import_zod.z.string(),
+  isTemporary: import_zod.z.boolean(),
+  isRandom: import_zod.z.boolean()
+});
+const Flag = SendingBase.extend({
+  flag: import_zod.z.string()
+});
+const Color = SendingBase.extend({
+  color: import_zod.z.string()
+});
+const StreamerSettings = import_zod.z.object({
+  borders: import_zod.z.boolean(),
+  flags: import_zod.z.boolean(),
+  streamOverlay: import_zod.z.boolean(),
+  borderAdmin: import_zod.z.boolean(),
+  temporaryGuesses: import_zod.z.boolean(),
+  streamer: import_zod.z.string()
+});
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {});
 //# sourceMappingURL=index.js.map

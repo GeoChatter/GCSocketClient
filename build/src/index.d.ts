@@ -1,6 +1,5 @@
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod";
-import { Color, Flag, Guess, StreamerSettings } from "./types.js";
 interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any;
     onSuccessfulGuess?: () => any;
@@ -64,4 +63,122 @@ export default class GCSignalRClient {
      */
     sendColor(data: z.infer<typeof Color>): Promise<void>;
 }
+declare const Guess: z.ZodObject<z.extendShape<{
+    bot: z.ZodString;
+    tkn: z.ZodString;
+    id: z.ZodString;
+    name: z.ZodString;
+    sourcePlatform: z.ZodEnum<["YouTube", "Twitch"]>;
+    display: z.ZodString;
+    pic: z.ZodString;
+}, {
+    lat: z.ZodString;
+    lng: z.ZodString;
+    isTemporary: z.ZodBoolean;
+    isRandom: z.ZodBoolean;
+}>, "strip", z.ZodTypeAny, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    lat: string;
+    lng: string;
+    isTemporary: boolean;
+    isRandom: boolean;
+}, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    lat: string;
+    lng: string;
+    isTemporary: boolean;
+    isRandom: boolean;
+}>;
+declare const Flag: z.ZodObject<z.extendShape<{
+    bot: z.ZodString;
+    tkn: z.ZodString;
+    id: z.ZodString;
+    name: z.ZodString;
+    sourcePlatform: z.ZodEnum<["YouTube", "Twitch"]>;
+    display: z.ZodString;
+    pic: z.ZodString;
+}, {
+    flag: z.ZodString;
+}>, "strip", z.ZodTypeAny, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    flag: string;
+}, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    flag: string;
+}>;
+declare const Color: z.ZodObject<z.extendShape<{
+    bot: z.ZodString;
+    tkn: z.ZodString;
+    id: z.ZodString;
+    name: z.ZodString;
+    sourcePlatform: z.ZodEnum<["YouTube", "Twitch"]>;
+    display: z.ZodString;
+    pic: z.ZodString;
+}, {
+    color: z.ZodString;
+}>, "strip", z.ZodTypeAny, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    color: string;
+}, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+    color: string;
+}>;
+declare const StreamerSettings: z.ZodObject<{
+    borders: z.ZodBoolean;
+    flags: z.ZodBoolean;
+    streamOverlay: z.ZodBoolean;
+    borderAdmin: z.ZodBoolean;
+    temporaryGuesses: z.ZodBoolean;
+    streamer: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    borders: boolean;
+    flags: boolean;
+    streamOverlay: boolean;
+    borderAdmin: boolean;
+    temporaryGuesses: boolean;
+    streamer: string;
+}, {
+    borders: boolean;
+    flags: boolean;
+    streamOverlay: boolean;
+    borderAdmin: boolean;
+    temporaryGuesses: boolean;
+    streamer: string;
+}>;
 export {};

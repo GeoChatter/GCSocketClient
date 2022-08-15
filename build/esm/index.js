@@ -1,7 +1,5 @@
 import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
-import { createErrorText } from "./helpers.js";
-import { Color, Flag, StreamerSettings } from "./types.js";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;
@@ -119,6 +117,90 @@ class GCSignalRClient {
     return await this.connection.invoke("GetGuessState", id);
   }
 }
+function createErrorText(status) {
+  switch (status) {
+    case GuessState.Banned: {
+      return "You are banned by the streamer and not allowed participate in any games.";
+    }
+    case GuessState.BotNotFound: {
+      return "Bot not found";
+    }
+    case GuessState.GuessedAlready: {
+      return "Already sent a guess for the round!";
+    }
+    case GuessState.InvalidCoordinates: {
+      return "Invalid coordinates. Refresh the page.";
+    }
+    case GuessState.NoGame: {
+      return "No ongoing game found, try again later.";
+    }
+    case GuessState.NotFound: {
+      return "Invalid user data. Refresh the page.";
+    }
+    case GuessState.SameCoordinates: {
+      return "Failed to send same guess back to back.";
+    }
+    case GuessState.TooFast: {
+      return "Sending guesses too fast, try guessing again.";
+    }
+    case GuessState.UndefinedError: {
+      return "Server error. Try guessing again.";
+    }
+    case GuessState.Unknown: {
+      return "Invalid guess id. Refresh the page.";
+    }
+    default: {
+      return "Something went wrong. Try guessing again.";
+    }
+  }
+}
+var GuessState = /* @__PURE__ */ ((GuessState2) => {
+  GuessState2["Submitted"] = "Submitted";
+  GuessState2["Success"] = "Success";
+  GuessState2["NoGame"] = "NoGame";
+  GuessState2["TempSuccess"] = "TempSuccess";
+  GuessState2["NotFound"] = "NotFound";
+  GuessState2["Banned"] = "Banned";
+  GuessState2["GuessedAlready"] = "GuessedAlready";
+  GuessState2["TooFast"] = "TooFast";
+  GuessState2["InvalidCoordinates"] = "InvalidCoordinates";
+  GuessState2["SameCoordinates"] = "SameCoordinates";
+  GuessState2["UndefinedError"] = "UndefinedError";
+  GuessState2["BotNotFound"] = "BotNotFound";
+  GuessState2["Unknown"] = "Unknown";
+  return GuessState2;
+})(GuessState || {});
+const SendingBase = z.object(
+  {
+    bot: z.string(),
+    tkn: z.string(),
+    id: z.string(),
+    name: z.string(),
+    sourcePlatform: z.enum(["YouTube", "Twitch"]),
+    display: z.string(),
+    pic: z.string()
+  }
+);
+const Guess = SendingBase.extend({
+  lat: z.string(),
+  lng: z.string(),
+  isTemporary: z.boolean(),
+  isRandom: z.boolean()
+});
+const Flag = SendingBase.extend({
+  flag: z.string()
+});
+const Color = SendingBase.extend({
+  color: z.string()
+});
+const StreamerSettings = z.object({
+  borders: z.boolean(),
+  flags: z.boolean(),
+  streamOverlay: z.boolean(),
+  borderAdmin: z.boolean(),
+  temporaryGuesses: z.boolean(),
+  streamer: z.string()
+});
 export {
   GCSignalRClient as default
 };
