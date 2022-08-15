@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod"
-import { createErrorText, GuessState } from './helpers';
+import { createErrorText, GuessState } from './helpers.js';
 
-import { Color, Flag, Guess, StreamerSettings } from "./types"
+import { Color, Flag, Guess, StreamerSettings } from "./types.js"
 
 
 interface Listeners {
