@@ -29,8 +29,8 @@ __export(src_exports, {
 module.exports = __toCommonJS(src_exports);
 var signalR = __toESM(require("@microsoft/signalr"));
 var import_zod = require("zod");
-var import_helpers = require("./helpers");
-var import_types = require("./types");
+var import_helpers = require("./helpers.js");
+var import_types = require("./types.js");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;

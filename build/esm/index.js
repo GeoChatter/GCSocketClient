@@ -1,7 +1,7 @@
 import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
-import { createErrorText } from "./helpers";
-import { Color, Flag, StreamerSettings } from "./types";
+import { createErrorText } from "./helpers.js";
+import { Color, Flag, StreamerSettings } from "./types.js";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;

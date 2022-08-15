@@ -1,6 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod";
-import { Color, Flag, Guess, StreamerSettings } from "./types";
+import { Color, Flag, Guess, StreamerSettings } from "./types.js";
 interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any;
     onSuccessfulGuess?: () => any;
