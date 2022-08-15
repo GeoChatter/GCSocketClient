@@ -9,7 +9,7 @@ export default class GCSignalRClient {
     #private;
     connection: signalR.HubConnection;
     private listeners?;
-    private _streamerCode?;
+    private _streamerCode;
     private running;
     /**
      * The constructor for the class. It is called when the class is instantiated.
@@ -17,17 +17,17 @@ export default class GCSignalRClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode?: string, listeners?: Listeners);
+    constructor(url: string, streamerCode: string, listeners?: Listeners);
     /**
      * It sets the streamer code and logs in to the map.
      * @param {string | undefined} streamerCode - The streamer code that you get from the streamer(used to be the bot name).
      */
-    set streamerCode(streamerCode: string | undefined);
+    set streamerCode(streamerCode: string);
     /**
      * It returns the value of the private variable _streamerCode.
      * @returns The streamerCode property is being returned.
      */
-    get streamerCode(): (string | undefined);
+    get streamerCode(): (string);
     /**
      * It stops the connection to the SignalR hub.
      */

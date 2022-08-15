@@ -16,7 +16,7 @@ const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export default class GCSignalRClient {
     connection: signalR.HubConnection
     private listeners?: Listeners
-    private _streamerCode?: string
+    private _streamerCode: string
     private running = false
 
 
@@ -26,7 +26,7 @@ export default class GCSignalRClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode?: string, listeners?: Listeners) {
+    constructor(url: string, streamerCode: string, listeners?: Listeners) {
         const result = z.string().url().safeParse(url)
         if (result.success) {
             this.connection = new signalR.HubConnectionBuilder().withUrl(result.data, {}).build();
@@ -44,7 +44,7 @@ export default class GCSignalRClient {
      * It sets the streamer code and logs in to the map.
      * @param {string | undefined} streamerCode - The streamer code that you get from the streamer(used to be the bot name).
      */
-    set streamerCode(streamerCode: string | undefined) {
+    set streamerCode(streamerCode: string) {
         if (!streamerCode) {
             console.warn("no streamer code given")
         }
@@ -57,7 +57,7 @@ export default class GCSignalRClient {
      * It returns the value of the private variable _streamerCode.
      * @returns The streamerCode property is being returned.
      */
-    get streamerCode(): (string | undefined) {
+    get streamerCode(): (string) {
         return this._streamerCode
     }
 
