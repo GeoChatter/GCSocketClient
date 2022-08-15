@@ -27,11 +27,17 @@ export default class GCSignalRClient {
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
     constructor(url: string, streamerCode?: string, listeners?: Listeners) {
-        z.string().url().parse(url)
-        this.connection = new signalR.HubConnectionBuilder().withUrl(url, {}).build();
-        this._streamerCode = streamerCode
-        this.listeners = listeners
-        this.#start()
+        const result = z.string().url().safeParse(url)
+        if (result.success) {
+            this.connection = new signalR.HubConnectionBuilder().withUrl(result.data, {}).build();
+            this._streamerCode = streamerCode
+            this.listeners = listeners
+            this.#start()
+        }
+        else {
+            throw  result.error
+        }
+
     }
 
     /**
@@ -95,8 +101,13 @@ export default class GCSignalRClient {
      * server and then gets the streamer settings from the server as a response.
      */
     async #logInToMap() {
-        const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode))
-        this.#setStreamerSettings(streamerSettings)
+        const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode))
+        if (streamerSettingsRes.success) {
+            this.#setStreamerSettings(streamerSettingsRes.data)
+        }
+        else {
+            console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error)
+        }
     }
 
     /**
@@ -138,8 +149,12 @@ export default class GCSignalRClient {
         }
 
         await this.connection.start()
-        const streamerSettings = StreamerSettings.parse(await this.connection.invoke("MapLogin", this.streamerCode))
-        this.#setStreamerSettings(streamerSettings)
+        const streamerSettingsRes = StreamerSettings.safeParse(await this.connection.invoke("MapLogin", this.streamerCode))
+        if (streamerSettingsRes.success) {
+            this.#setStreamerSettings(streamerSettingsRes.data)
+        } else {
+            console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error)
+        }
     }
 
     /**
@@ -190,7 +205,12 @@ export default class GCSignalRClient {
      * @param {Flag} data - Flag - This is the data that will be sent to the server.
      */
     async sendFlag(data: z.infer<typeof Flag>) {
-        await this.connection.invoke("SendFlagToClients", Flag.parse(data))
+        const flagParseRes = Flag.safeParse(data)
+        if (flagParseRes.success) {
+            await this.connection.invoke("SendFlagToClients",)
+        } else {
+            console.error(flagParseRes.error)
+        }
     }
 
     /**
@@ -198,7 +218,13 @@ export default class GCSignalRClient {
      * @param {Flag} data - Flag - This is the data that will be sent to the server.
      */
     async sendColor(data: z.infer<typeof Color>) {
-        await this.connection.invoke("SendColorToClients", Color.parse(data))
+        const ColorParseRes = Color.safeParse(data)
+        if (ColorParseRes.success) {
+            await this.connection.invoke("SendColorToClients", ColorParseRes.data)
+        }
+        else {
+            console.error(ColorParseRes.error)
+        }
     }
 
     /**
@@ -217,12 +243,8 @@ export default class GCSignalRClient {
  * @param {GuessState} status - The status of the guess.
  * @returns A string
  */
-
-
- function createErrorText(status: GuessState): string
-{
-    switch (status)
-    {
+function createErrorText(status: GuessState): string {
+    switch (status) {
         case GuessState.Banned:
             {
                 return "You are banned by the streamer and not allowed participate in any games.";
@@ -270,37 +292,36 @@ export default class GCSignalRClient {
     }
 }
 
- const enum GuessState
-    { 
-        /** State for recently submitted guess */
-        Submitted = "Submitted",
-        /** State for successfully registered guess */
-        Success = "Success",
-        /** State for guess not having any game to be sent to */
-        NoGame = "NoGame",
-        /** State for temporary guesses successfully registering */
-        TempSuccess = "TempSuccess",
-        /** State for invalid user data */
-        NotFound = "NotFound",
-        /** State for guess sent by a banned player */
-        Banned = "Banned",
-        /** State for multiguess not being allowed */
-        GuessedAlready = "GuessedAlready",
-        /** State for multiguess sent too often */
-        TooFast = "TooFast",
-        /** State for invalid guess coordinates */
-        InvalidCoordinates = "InvalidCoordinates",
-        /** State for sending same coordinates back to back */
-        SameCoordinates = "SameCoordinates",
-        /** State for internal error */
-        UndefinedError = "UndefinedError",
-        /** State for no game/bot found */
-        BotNotFound = "BotNotFound",
-        /** State for unknown guess id */
-        Unknown = "Unknown"
-    }
+const enum GuessState {
+    /** State for recently submitted guess */
+    Submitted = "Submitted",
+    /** State for successfully registered guess */
+    Success = "Success",
+    /** State for guess not having any game to be sent to */
+    NoGame = "NoGame",
+    /** State for temporary guesses successfully registering */
+    TempSuccess = "TempSuccess",
+    /** State for invalid user data */
+    NotFound = "NotFound",
+    /** State for guess sent by a banned player */
+    Banned = "Banned",
+    /** State for multiguess not being allowed */
+    GuessedAlready = "GuessedAlready",
+    /** State for multiguess sent too often */
+    TooFast = "TooFast",
+    /** State for invalid guess coordinates */
+    InvalidCoordinates = "InvalidCoordinates",
+    /** State for sending same coordinates back to back */
+    SameCoordinates = "SameCoordinates",
+    /** State for internal error */
+    UndefinedError = "UndefinedError",
+    /** State for no game/bot found */
+    BotNotFound = "BotNotFound",
+    /** State for unknown guess id */
+    Unknown = "Unknown"
+}
 
- const SendingBase = z.object(
+const SendingBase = z.object(
     {
         bot: z.string(),
         tkn: z.string(),
@@ -312,7 +333,7 @@ export default class GCSignalRClient {
     }
 )
 
- const Guess = SendingBase.extend( {
+const Guess = SendingBase.extend({
     lat: z.string(),
     lng: z.string(),
     isTemporary: z.boolean(),
@@ -320,17 +341,17 @@ export default class GCSignalRClient {
 });
 
 
- const Flag =  SendingBase.extend( {
+const Flag = SendingBase.extend({
     flag: z.string()
 });
 
 
- const  Color = SendingBase.extend(  {
+const Color = SendingBase.extend({
     color: z.string()
 });
 
 // TODO: add all settings and maybe with show option
- const StreamerSettings = z.object(  {
+const StreamerSettings = z.object({
     borders: z.boolean(),
     flags: z.boolean(),
     streamOverlay: z.boolean(),

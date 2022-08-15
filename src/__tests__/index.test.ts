@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { vi,describe, expect, it } from "vitest";
 import  GCSignalRClient from "../index";
 
@@ -15,7 +19,7 @@ vi.mock("@microsoft/signalr", () => {
                invoke : vi.fn((method:string, data:any) => {
                  if (method === "MapLogin") {
                    // FIXME: RETURN REAL DATA HERE SOME DAY
-                   return  {borders: true}
+                   return  "test"
                  }
 
                })}
