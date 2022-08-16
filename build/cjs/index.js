@@ -323,7 +323,7 @@ const MapOptions = import_zod.z.object({
   showFlags: import_zod.z.boolean(),
   showBorders: import_zod.z.boolean(),
   showStreamOverlay: import_zod.z.boolean()
-});
+}).nullable();
 const MapGameSettings = import_zod.z.object({
   mapID: import_zod.z.number(),
   mapName: import_zod.z.string(),
@@ -336,7 +336,7 @@ const MapGameSettings = import_zod.z.object({
   isInfinite: import_zod.z.boolean(),
   timeLimit: import_zod.z.number(),
   streakType: import_zod.z.string()
-}).nullable();
+});
 const PlayerBase = import_zod.z.object({
   displayName: import_zod.z.string(),
   userName: import_zod.z.string(),

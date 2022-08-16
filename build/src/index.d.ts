@@ -190,7 +190,7 @@ export declare const Color: z.ZodObject<z.extendShape<{
     pic: string;
     color: string;
 }>;
-export declare const MapOptions: z.ZodObject<{
+export declare const MapOptions: z.ZodNullable<z.ZodObject<{
     mapIdentifier: z.ZodOptional<z.ZodString>;
     botname: z.ZodOptional<z.ZodString>;
     streamer: z.ZodString;
@@ -223,8 +223,8 @@ export declare const MapOptions: z.ZodObject<{
     showFlags: boolean;
     showBorders: boolean;
     showStreamOverlay: boolean;
-}>;
-export declare const MapGameSettings: z.ZodNullable<z.ZodObject<{
+}>>;
+export declare const MapGameSettings: z.ZodObject<{
     mapID: z.ZodNumber;
     mapName: z.ZodString;
     forbidMoving: z.ZodBoolean;
@@ -260,7 +260,7 @@ export declare const MapGameSettings: z.ZodNullable<z.ZodObject<{
     isInfinite: boolean;
     timeLimit: number;
     streakType: string;
-}>>;
+}>;
 export declare const PlayerBase: z.ZodObject<{
     displayName: z.ZodString;
     userName: z.ZodString;

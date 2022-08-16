@@ -283,7 +283,7 @@ const MapOptions = z.object({
   showFlags: z.boolean(),
   showBorders: z.boolean(),
   showStreamOverlay: z.boolean()
-});
+}).nullable();
 const MapGameSettings = z.object({
   mapID: z.number(),
   mapName: z.string(),
@@ -296,7 +296,7 @@ const MapGameSettings = z.object({
   isInfinite: z.boolean(),
   timeLimit: z.number(),
   streakType: z.string()
-}).nullable();
+});
 const PlayerBase = z.object({
   displayName: z.string(),
   userName: z.string(),
