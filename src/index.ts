@@ -3,6 +3,7 @@
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod"
 
+export { z } from "zod"
 
 interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any
@@ -13,7 +14,7 @@ interface Listeners {
 // helper to allow sleeping 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-export default class GCSignalRClient {
+export class GCSignalRClient {
     connection: signalR.HubConnection
     private listeners?: Listeners
     private _streamerCode: string
@@ -327,7 +328,7 @@ const enum GuessState {
     Unknown = "Unknown"
 }
 
-const SendingBase = z.object(
+export const SendingBase = z.object(
     {
         bot: z.string(),
         tkn: z.string(),
@@ -339,7 +340,7 @@ const SendingBase = z.object(
     }
 )
 
-const Guess = SendingBase.extend({
+export const Guess = SendingBase.extend({
     lat: z.string(),
     lng: z.string(),
     isTemporary: z.boolean(),
@@ -347,17 +348,17 @@ const Guess = SendingBase.extend({
 });
 
 
-const Flag = SendingBase.extend({
+export const Flag = SendingBase.extend({
     flag: z.string()
 });
 
 
-const Color = SendingBase.extend({
+export const Color = SendingBase.extend({
     color: z.string()
 });
 
 // TODO: add all settings and maybe with show option
-const StreamerSettings = z.object({
+export const StreamerSettings = z.object({
     borders: z.boolean(),
     flags: z.boolean(),
     streamOverlay: z.boolean(),
