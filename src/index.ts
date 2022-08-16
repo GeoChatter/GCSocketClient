@@ -14,7 +14,7 @@ interface Listeners {
 // helper to allow sleeping 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-export class GCSignalRClient {
+export class GCSocketClient {
     connection: signalR.HubConnection
     private listeners?: Listeners
     private _streamerCode: string

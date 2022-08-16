@@ -26,7 +26,7 @@ var src_exports = {};
 __export(src_exports, {
   Color: () => Color,
   Flag: () => Flag,
-  GCSignalRClient: () => GCSignalRClient,
+  GCSocketClient: () => GCSocketClient,
   Guess: () => Guess,
   SendingBase: () => SendingBase,
   StreamerSettings: () => StreamerSettings,
@@ -37,7 +37,7 @@ var signalR = __toESM(require("@microsoft/signalr"));
 var import_zod = require("zod");
 var import_zod2 = require("zod");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-class GCSignalRClient {
+class GCSocketClient {
   connection;
   listeners;
   _streamerCode;
@@ -269,7 +269,7 @@ const StreamerSettings = import_zod.z.object({
 0 && (module.exports = {
   Color,
   Flag,
-  GCSignalRClient,
+  GCSocketClient,
   Guess,
   SendingBase,
   StreamerSettings,

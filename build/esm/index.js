@@ -2,7 +2,7 @@ import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
 import { z as z2 } from "zod";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-class GCSignalRClient {
+class GCSocketClient {
   connection;
   listeners;
   _streamerCode;
@@ -233,7 +233,7 @@ const StreamerSettings = z.object({
 export {
   Color,
   Flag,
-  GCSignalRClient,
+  GCSocketClient,
   Guess,
   SendingBase,
   StreamerSettings,

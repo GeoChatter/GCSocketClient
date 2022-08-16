@@ -6,7 +6,7 @@ interface Listeners {
     onSuccessfulGuess?: () => any;
     onFailedGuess?: (error: string, text?: string) => any;
 }
-export declare class GCSignalRClient {
+export declare class GCSocketClient {
     #private;
     connection: signalR.HubConnection;
     private listeners?;
