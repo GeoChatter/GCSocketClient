@@ -162,7 +162,7 @@ class GCSocketClient {
   async sendFlag(data) {
     const flagParseRes = Flag.safeParse(data);
     if (flagParseRes.success) {
-      await this.connection.invoke("SendFlagToClients");
+      await this.connection.invoke("SendFlagToClients", flagParseRes.data);
     } else {
       console.error(flagParseRes.error);
       console.log(data);
