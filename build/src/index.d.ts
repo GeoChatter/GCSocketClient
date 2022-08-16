@@ -224,7 +224,7 @@ export declare const MapOptions: z.ZodObject<{
     showBorders: boolean;
     showStreamOverlay: boolean;
 }>;
-export declare const MapGameSettings: z.ZodObject<{
+export declare const MapGameSettings: z.ZodNullable<z.ZodObject<{
     mapID: z.ZodNumber;
     mapName: z.ZodString;
     forbidMoving: z.ZodBoolean;
@@ -260,7 +260,7 @@ export declare const MapGameSettings: z.ZodObject<{
     isInfinite: boolean;
     timeLimit: number;
     streakType: string;
-}>;
+}>>;
 export declare const PlayerBase: z.ZodObject<{
     displayName: z.ZodString;
     userName: z.ZodString;

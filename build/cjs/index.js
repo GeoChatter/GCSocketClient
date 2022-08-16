@@ -336,7 +336,7 @@ const MapGameSettings = import_zod.z.object({
   isInfinite: import_zod.z.boolean(),
   timeLimit: import_zod.z.number(),
   streakType: import_zod.z.string()
-});
+}).nullable();
 const PlayerBase = import_zod.z.object({
   displayName: import_zod.z.string(),
   userName: import_zod.z.string(),

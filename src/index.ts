@@ -485,7 +485,7 @@ export const MapGameSettings = z.object({
     isInfinite: z.boolean(),
     timeLimit: z.number(),
     streakType: z.string(),
-})
+}).nullable()
 
 export const PlayerBase = z.object({
     displayName: z.string(),

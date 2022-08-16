@@ -296,7 +296,7 @@ const MapGameSettings = z.object({
   isInfinite: z.boolean(),
   timeLimit: z.number(),
   streakType: z.string()
-});
+}).nullable();
 const PlayerBase = z.object({
   displayName: z.string(),
   userName: z.string(),
