@@ -269,37 +269,37 @@ const MapOptions = z.object({
   showStreamOverlay: z.boolean()
 });
 const MapGameSettings = z.object({
-  MapID: z.string(),
-  MapName: z.string(),
-  ForbidMoving: z.boolean(),
-  ForbidRotating: z.boolean(),
-  ForbidZooming: z.boolean(),
-  GameMode: z.string(),
-  GameState: z.string(),
-  IsStreak: z.boolean(),
-  IsInfinite: z.boolean(),
-  TimeLimit: z.number(),
-  StreakType: z.string()
+  mapID: z.string(),
+  mapName: z.string(),
+  forbidMoving: z.boolean(),
+  forbidRotating: z.boolean(),
+  forbidZooming: z.boolean(),
+  gameMode: z.string(),
+  gameState: z.string(),
+  isStreak: z.boolean(),
+  isInfinite: z.boolean(),
+  timeLimit: z.number(),
+  streakType: z.string()
 });
 const MapRoundResult = z.object({
-  DisplayName: z.string(),
-  UserName: z.string(),
-  ProfilePicUrl: z.string().url(),
-  WasRandom: z.boolean(),
-  Score: z.number(),
-  Distance: z.number(),
-  TimeTaken: z.number(),
-  Streak: z.number(),
-  CountryCode: z.string(),
-  ExactCountryCode: z.string(),
-  GuessCount: z.number(),
-  IsStreamerResult: z.boolean(),
-  GuessedBefore: z.boolean()
+  displayName: z.string(),
+  userName: z.string(),
+  profilePicUrl: z.string().url(),
+  wasRandom: z.boolean(),
+  score: z.number(),
+  distance: z.number(),
+  timeTaken: z.number(),
+  streak: z.number(),
+  countryCode: z.string(),
+  exactCountryCode: z.string(),
+  guessCount: z.number(),
+  isStreamerResult: z.boolean(),
+  guessedBefore: z.boolean()
 });
 const MapRoundSettings = z.object({
-  RoundNumber: z.number(),
-  IsMultiGuess: z.boolean(),
-  StartTime: z.string()
+  roundNumber: z.number(),
+  isMultiGuess: z.boolean(),
+  startTime: z.string()
 });
 export {
   Color,

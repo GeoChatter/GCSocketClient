@@ -307,37 +307,37 @@ const MapOptions = import_zod.z.object({
   showStreamOverlay: import_zod.z.boolean()
 });
 const MapGameSettings = import_zod.z.object({
-  MapID: import_zod.z.string(),
-  MapName: import_zod.z.string(),
-  ForbidMoving: import_zod.z.boolean(),
-  ForbidRotating: import_zod.z.boolean(),
-  ForbidZooming: import_zod.z.boolean(),
-  GameMode: import_zod.z.string(),
-  GameState: import_zod.z.string(),
-  IsStreak: import_zod.z.boolean(),
-  IsInfinite: import_zod.z.boolean(),
-  TimeLimit: import_zod.z.number(),
-  StreakType: import_zod.z.string()
+  mapID: import_zod.z.string(),
+  mapName: import_zod.z.string(),
+  forbidMoving: import_zod.z.boolean(),
+  forbidRotating: import_zod.z.boolean(),
+  forbidZooming: import_zod.z.boolean(),
+  gameMode: import_zod.z.string(),
+  gameState: import_zod.z.string(),
+  isStreak: import_zod.z.boolean(),
+  isInfinite: import_zod.z.boolean(),
+  timeLimit: import_zod.z.number(),
+  streakType: import_zod.z.string()
 });
 const MapRoundResult = import_zod.z.object({
-  DisplayName: import_zod.z.string(),
-  UserName: import_zod.z.string(),
-  ProfilePicUrl: import_zod.z.string().url(),
-  WasRandom: import_zod.z.boolean(),
-  Score: import_zod.z.number(),
-  Distance: import_zod.z.number(),
-  TimeTaken: import_zod.z.number(),
-  Streak: import_zod.z.number(),
-  CountryCode: import_zod.z.string(),
-  ExactCountryCode: import_zod.z.string(),
-  GuessCount: import_zod.z.number(),
-  IsStreamerResult: import_zod.z.boolean(),
-  GuessedBefore: import_zod.z.boolean()
+  displayName: import_zod.z.string(),
+  userName: import_zod.z.string(),
+  profilePicUrl: import_zod.z.string().url(),
+  wasRandom: import_zod.z.boolean(),
+  score: import_zod.z.number(),
+  distance: import_zod.z.number(),
+  timeTaken: import_zod.z.number(),
+  streak: import_zod.z.number(),
+  countryCode: import_zod.z.string(),
+  exactCountryCode: import_zod.z.string(),
+  guessCount: import_zod.z.number(),
+  isStreamerResult: import_zod.z.boolean(),
+  guessedBefore: import_zod.z.boolean()
 });
 const MapRoundSettings = import_zod.z.object({
-  RoundNumber: import_zod.z.number(),
-  IsMultiGuess: import_zod.z.boolean(),
-  StartTime: import_zod.z.string()
+  roundNumber: import_zod.z.number(),
+  isMultiGuess: import_zod.z.boolean(),
+  startTime: import_zod.z.string()
 });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
