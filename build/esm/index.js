@@ -51,7 +51,7 @@ class GCSocketClient {
   }
   async #logInToMap() {
     const res = await this.connection.invoke("MapLogin", this.streamerCode);
-    const streamerSettingsRes = StreamerSettings.safeParse(res);
+    const streamerSettingsRes = MapOptions.safeParse(res);
     if (streamerSettingsRes.success) {
       this.#setStreamerSettings(streamerSettingsRes.data);
     } else {
@@ -62,6 +62,41 @@ class GCSocketClient {
   #listenToStreamerSettings() {
     this.connection.on("SetMapFeatures", (streamerSettings) => {
       this.#setStreamerSettings(streamerSettings);
+    });
+  }
+  #listenToGameStart() {
+    this.connection.on("StartGame", (data) => {
+      const res = MapGameSettings.safeParse(data);
+      if (res.success) {
+        this.listeners?.onGameStart?.(res.data);
+      } else {
+        console.error("game start", res.error);
+      }
+    });
+  }
+  #listenToRoundStart() {
+    this.connection.on("StartRound", (data) => {
+      const res = MapRoundSettings.safeParse(data);
+      if (res.success) {
+        this.listeners?.onRoundStart?.(res.data);
+      } else {
+        console.error("round start", res.error);
+      }
+    });
+  }
+  #listenToRoundEnd() {
+    this.connection.on("EndRound", () => {
+      this.listeners?.onRoundEnd?.();
+    });
+  }
+  #listenToGameEnd() {
+    this.connection.on("EndGame", () => {
+      this.listeners?.onGameEnd?.();
+    });
+  }
+  #listenToGameExit() {
+    this.connection.on("ExitGame", () => {
+      this.listeners?.onGameExit?.();
     });
   }
   #listenToProblems() {
@@ -82,7 +117,7 @@ class GCSocketClient {
     }
     await this.connection.start();
     const res = await this.connection.invoke("MapLogin", this.streamerCode);
-    const streamerSettingsRes = StreamerSettings.safeParse(res);
+    const streamerSettingsRes = MapOptions.safeParse(res);
     if (streamerSettingsRes.success) {
       this.#setStreamerSettings(streamerSettingsRes.data);
     } else {
@@ -222,7 +257,7 @@ const Flag = SendingBase.extend({
 const Color = SendingBase.extend({
   color: z.string()
 });
-const StreamerSettings = z.object({
+const MapOptions = z.object({
   MapIdentifier: z.string(),
   Streamer: z.string(),
   InstalledFlagPacks: z.array(z.string()),
@@ -232,13 +267,49 @@ const StreamerSettings = z.object({
   ShowFlags: z.boolean(),
   ShowStreamOverlay: z.boolean()
 });
+const MapGameSettings = z.object({
+  MapID: z.string(),
+  MapName: z.string(),
+  ForbidMoving: z.boolean(),
+  ForbidRotating: z.boolean(),
+  ForbidZooming: z.boolean(),
+  GameMode: z.string(),
+  GameState: z.string(),
+  IsStreak: z.boolean(),
+  IsInfinite: z.boolean(),
+  TimeLimit: z.number(),
+  StreakType: z.string()
+});
+const MapRoundResult = z.object({
+  DisplayName: z.string(),
+  UserName: z.string(),
+  ProfilePicUrl: z.string().url(),
+  WasRandom: z.boolean(),
+  Score: z.number(),
+  Distance: z.number(),
+  TimeTaken: z.number(),
+  Streak: z.number(),
+  CountryCode: z.string(),
+  ExactCountryCode: z.string(),
+  GuessCount: z.number(),
+  IsStreamerResult: z.boolean(),
+  GuessedBefore: z.boolean()
+});
+const MapRoundSettings = z.object({
+  RoundNumber: z.number(),
+  IsMultiGuess: z.boolean(),
+  StartTime: z.string()
+});
 export {
   Color,
   Flag,
   GCSocketClient,
   Guess,
+  MapGameSettings,
+  MapOptions,
+  MapRoundResult,
+  MapRoundSettings,
   SendingBase,
-  StreamerSettings,
   z2 as z
 };
 //# sourceMappingURL=index.js.map

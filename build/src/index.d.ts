@@ -2,9 +2,14 @@ import * as signalR from '@microsoft/signalr';
 import { z } from "zod";
 export { z } from "zod";
 interface Listeners {
-    onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any;
+    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => any;
     onSuccessfulGuess?: () => any;
     onFailedGuess?: (error: string, text?: string) => any;
+    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any;
+    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any;
+    onRoundEnd?: () => any;
+    onGameEnd?: () => any;
+    onGameExit?: () => any;
 }
 export declare class GCSocketClient {
     #private;
@@ -185,7 +190,7 @@ export declare const Color: z.ZodObject<z.extendShape<{
     pic: string;
     color: string;
 }>;
-export declare const StreamerSettings: z.ZodObject<{
+export declare const MapOptions: z.ZodObject<{
     MapIdentifier: z.ZodString;
     Streamer: z.ZodString;
     InstalledFlagPacks: z.ZodArray<z.ZodString, "many">;
@@ -212,4 +217,97 @@ export declare const StreamerSettings: z.ZodObject<{
     EnableTemporaryGuesses: boolean;
     ShowFlags: boolean;
     ShowStreamOverlay: boolean;
+}>;
+export declare const MapGameSettings: z.ZodObject<{
+    MapID: z.ZodString;
+    MapName: z.ZodString;
+    ForbidMoving: z.ZodBoolean;
+    ForbidRotating: z.ZodBoolean;
+    ForbidZooming: z.ZodBoolean;
+    GameMode: z.ZodString;
+    GameState: z.ZodString;
+    IsStreak: z.ZodBoolean;
+    IsInfinite: z.ZodBoolean;
+    TimeLimit: z.ZodNumber;
+    StreakType: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    GameMode: string;
+    MapID: string;
+    MapName: string;
+    ForbidMoving: boolean;
+    ForbidRotating: boolean;
+    ForbidZooming: boolean;
+    GameState: string;
+    IsStreak: boolean;
+    IsInfinite: boolean;
+    TimeLimit: number;
+    StreakType: string;
+}, {
+    GameMode: string;
+    MapID: string;
+    MapName: string;
+    ForbidMoving: boolean;
+    ForbidRotating: boolean;
+    ForbidZooming: boolean;
+    GameState: string;
+    IsStreak: boolean;
+    IsInfinite: boolean;
+    TimeLimit: number;
+    StreakType: string;
+}>;
+export declare const MapRoundResult: z.ZodObject<{
+    DisplayName: z.ZodString;
+    UserName: z.ZodString;
+    ProfilePicUrl: z.ZodString;
+    WasRandom: z.ZodBoolean;
+    Score: z.ZodNumber;
+    Distance: z.ZodNumber;
+    TimeTaken: z.ZodNumber;
+    Streak: z.ZodNumber;
+    CountryCode: z.ZodString;
+    ExactCountryCode: z.ZodString;
+    GuessCount: z.ZodNumber;
+    IsStreamerResult: z.ZodBoolean;
+    GuessedBefore: z.ZodBoolean;
+}, "strip", z.ZodTypeAny, {
+    DisplayName: string;
+    UserName: string;
+    ProfilePicUrl: string;
+    WasRandom: boolean;
+    Score: number;
+    Distance: number;
+    TimeTaken: number;
+    Streak: number;
+    CountryCode: string;
+    ExactCountryCode: string;
+    GuessCount: number;
+    IsStreamerResult: boolean;
+    GuessedBefore: boolean;
+}, {
+    DisplayName: string;
+    UserName: string;
+    ProfilePicUrl: string;
+    WasRandom: boolean;
+    Score: number;
+    Distance: number;
+    TimeTaken: number;
+    Streak: number;
+    CountryCode: string;
+    ExactCountryCode: string;
+    GuessCount: number;
+    IsStreamerResult: boolean;
+    GuessedBefore: boolean;
+}>;
+export declare const MapRoundSettings: z.ZodObject<{
+    RoundNumber: z.ZodNumber;
+    IsMultiGuess: z.ZodBoolean;
+    StartTime: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    RoundNumber: number;
+    IsMultiGuess: boolean;
+    StartTime: string;
+}, {
+    RoundNumber: number;
+    IsMultiGuess: boolean;
+    StartTime: string;
 }>;

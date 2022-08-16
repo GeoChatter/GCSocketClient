@@ -6,9 +6,14 @@ import { z } from "zod"
 export { z } from "zod"
 
 interface Listeners {
-    onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any
+    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => any
     onSuccessfulGuess?: () => any,
     onFailedGuess?: (error: string, text?: string) => any,
+    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any,
+    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any,
+    onRoundEnd?: () => any,
+    onGameEnd?: () => any,
+    onGameExit?: () => any,
 }
 
 // helper to allow sleeping 
@@ -36,7 +41,7 @@ export class GCSocketClient {
             this.#start()
         }
         else {
-            throw  result.error
+            throw result.error
         }
 
     }
@@ -88,7 +93,7 @@ export class GCSocketClient {
      * 
      * @param {StreamerSettings} [streamerSettings] - StreamerSettings is an object that contains the streamer settings.
      */
-    #setStreamerSettings(streamerSettings?: z.infer<typeof StreamerSettings>) {
+    #setStreamerSettings(streamerSettings?: z.infer<typeof MapOptions>) {
         if (!streamerSettings) {
             console.warn("did'nt receive streamer settings as response")
         }
@@ -103,12 +108,12 @@ export class GCSocketClient {
      */
     async #logInToMap() {
         const res: unknown = await this.connection.invoke("MapLogin", this.streamerCode)
-        const streamerSettingsRes = StreamerSettings.safeParse(res)
+        const streamerSettingsRes = MapOptions.safeParse(res)
         if (streamerSettingsRes.success) {
             this.#setStreamerSettings(streamerSettingsRes.data)
         }
         else {
-            console.error("map log in" , streamerSettingsRes.error)
+            console.error("map log in", streamerSettingsRes.error)
             console.log(res)
         }
     }
@@ -118,10 +123,83 @@ export class GCSocketClient {
      * #setStreamerSettings function with the data sent by the server so the listener will be run
      */
     #listenToStreamerSettings() {
-        this.connection.on("SetMapFeatures", (streamerSettings: z.infer<typeof StreamerSettings>) => {
+        this.connection.on("SetMapFeatures", (streamerSettings: z.infer<typeof MapOptions>) => {
             this.#setStreamerSettings(streamerSettings)
         })
     }
+    /**
+     * It listens to the server for a message called "StartGame" and when it receives it, it calls the
+     * onGameStart listener with `mapGameSettings`
+     */
+    #listenToGameStart() {
+        this.connection.on("StartGame", (data: unknown) => {
+
+            const res = MapGameSettings.safeParse(data)
+            if (res.success) {
+                this.listeners?.onGameStart?.(res.data)
+            }
+            else {
+                console.error("game start", res.error)
+            }
+        })
+    }
+
+    /**
+     * It listens to the `StartRound` event from the server and calls the `onRoundStart` listener with the
+     * data from the server
+     */
+    #listenToRoundStart() {
+        this.connection.on("StartRound", (data: unknown) => {
+
+            const res = MapRoundSettings.safeParse(data)
+            if (res.success) {
+                this.listeners?.onRoundStart?.(res.data)
+            }
+            else {
+                console.error("round start", res.error)
+            }
+        })
+    }
+    /**
+     * It listens to the server for the "EndRound" event, and when it receives it, it calls the onRoundEnd
+     * function in the listeners object
+     */
+    #listenToRoundEnd() {
+        this.connection.on("EndRound", () => {
+
+            this.listeners?.onRoundEnd?.()
+
+        })
+    }
+    /**
+     * It listens for the "EndGame" event from the server, and when it receives it, it calls the
+     * onGameEnd listener
+     */
+    /**
+     * It listens to the server for the "EndGame" event, and when it receives it, it calls the onGameEnd
+     * listener
+     */
+    #listenToGameEnd() {
+        this.connection.on("EndGame", () => {
+
+            this.listeners?.onGameEnd?.()
+
+        })
+    }
+    /**
+     *  When the server sends the `ExitGame` message, call it calls the `onGameExit` listener
+     */
+    #listenToGameExit() {
+        this.connection.on("ExitGame", () => {
+
+            this.listeners?.onGameExit?.()
+
+        })
+    }
+
+
+
+
     /**
      * If the connection gets closed, it waits 1 second and tries to reconnect
      * it also logs if signal r is reconnecting
@@ -152,12 +230,12 @@ export class GCSocketClient {
         }
 
         await this.connection.start()
-        const res:unknown = await this.connection.invoke("MapLogin", this.streamerCode)
-        const streamerSettingsRes = StreamerSettings.safeParse(res)
+        const res: unknown = await this.connection.invoke("MapLogin", this.streamerCode)
+        const streamerSettingsRes = MapOptions.safeParse(res)
         if (streamerSettingsRes.success) {
             this.#setStreamerSettings(streamerSettingsRes.data)
         } else {
-            console.error("got a weird response from map login check if you need to update gcsocketlibrary",  streamerSettingsRes.error)
+            console.error("got a weird response from map login check if you need to update gcsocketlibrary", streamerSettingsRes.error)
             console.log(res)
         }
     }
@@ -358,7 +436,7 @@ export const Color = SendingBase.extend({
 });
 
 // TODO: add all settings and maybe with show option
-export const StreamerSettings = z.object({
+export const MapOptions = z.object({
     MapIdentifier: z.string(),
     Streamer: z.string(),
     // not sure
@@ -369,4 +447,40 @@ export const StreamerSettings = z.object({
     EnableTemporaryGuesses: z.boolean(),
     ShowFlags: z.boolean(),
     ShowStreamOverlay: z.boolean(),
+})
+
+
+export const MapGameSettings = z.object({
+    MapID: z.string(),
+    MapName: z.string(),
+    ForbidMoving: z.boolean(),
+    ForbidRotating: z.boolean(),
+    ForbidZooming: z.boolean(),
+    GameMode: z.string(),
+    GameState: z.string(),
+    IsStreak: z.boolean(),
+    IsInfinite: z.boolean(),
+    TimeLimit: z.number(),
+    StreakType: z.string(),
+})
+
+export const MapRoundResult = z.object({
+    DisplayName: z.string(),
+    UserName: z.string(),
+    ProfilePicUrl: z.string().url(),
+    WasRandom: z.boolean(),
+    Score: z.number(),
+    Distance: z.number(),
+    TimeTaken: z.number(),
+    Streak: z.number(),
+    CountryCode: z.string(),
+    ExactCountryCode: z.string(),
+    GuessCount: z.number(),
+    IsStreamerResult: z.boolean(),
+    GuessedBefore: z.boolean()
+})
+export const MapRoundSettings = z.object({
+    RoundNumber: z.number(),
+    IsMultiGuess: z.boolean(),
+    StartTime: z.string(),
 })
