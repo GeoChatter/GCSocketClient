@@ -191,32 +191,35 @@ export declare const Color: z.ZodObject<z.extendShape<{
     color: string;
 }>;
 export declare const MapOptions: z.ZodObject<{
-    MapIdentifier: z.ZodString;
-    Streamer: z.ZodString;
-    InstalledFlagPacks: z.ZodArray<z.ZodString, "many">;
-    GameMode: z.ZodString;
-    IsUSStreak: z.ZodBoolean;
-    EnableTemporaryGuesses: z.ZodBoolean;
-    ShowFlags: z.ZodBoolean;
-    ShowStreamOverlay: z.ZodBoolean;
+    mapIdentifier: z.ZodString;
+    streamer: z.ZodString;
+    installedFlagPacks: z.ZodString;
+    gameMode: z.ZodString;
+    isUSStreak: z.ZodBoolean;
+    temporaryGuesses: z.ZodBoolean;
+    showFlags: z.ZodBoolean;
+    showBorders: z.ZodBoolean;
+    showStreamOverlay: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
-    MapIdentifier: string;
-    Streamer: string;
-    InstalledFlagPacks: string[];
-    GameMode: string;
-    IsUSStreak: boolean;
-    EnableTemporaryGuesses: boolean;
-    ShowFlags: boolean;
-    ShowStreamOverlay: boolean;
+    mapIdentifier: string;
+    streamer: string;
+    installedFlagPacks: string;
+    gameMode: string;
+    isUSStreak: boolean;
+    temporaryGuesses: boolean;
+    showFlags: boolean;
+    showBorders: boolean;
+    showStreamOverlay: boolean;
 }, {
-    MapIdentifier: string;
-    Streamer: string;
-    InstalledFlagPacks: string[];
-    GameMode: string;
-    IsUSStreak: boolean;
-    EnableTemporaryGuesses: boolean;
-    ShowFlags: boolean;
-    ShowStreamOverlay: boolean;
+    mapIdentifier: string;
+    streamer: string;
+    installedFlagPacks: string;
+    gameMode: string;
+    isUSStreak: boolean;
+    temporaryGuesses: boolean;
+    showFlags: boolean;
+    showBorders: boolean;
+    showStreamOverlay: boolean;
 }>;
 export declare const MapGameSettings: z.ZodObject<{
     MapID: z.ZodString;
@@ -231,24 +234,24 @@ export declare const MapGameSettings: z.ZodObject<{
     TimeLimit: z.ZodNumber;
     StreakType: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    GameMode: string;
     MapID: string;
     MapName: string;
     ForbidMoving: boolean;
     ForbidRotating: boolean;
     ForbidZooming: boolean;
+    GameMode: string;
     GameState: string;
     IsStreak: boolean;
     IsInfinite: boolean;
     TimeLimit: number;
     StreakType: string;
 }, {
-    GameMode: string;
     MapID: string;
     MapName: string;
     ForbidMoving: boolean;
     ForbidRotating: boolean;
     ForbidZooming: boolean;
+    GameMode: string;
     GameState: string;
     IsStreak: boolean;
     IsInfinite: boolean;

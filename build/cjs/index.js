@@ -296,14 +296,15 @@ const Color = SendingBase.extend({
   color: import_zod.z.string()
 });
 const MapOptions = import_zod.z.object({
-  MapIdentifier: import_zod.z.string(),
-  Streamer: import_zod.z.string(),
-  InstalledFlagPacks: import_zod.z.array(import_zod.z.string()),
-  GameMode: import_zod.z.string(),
-  IsUSStreak: import_zod.z.boolean(),
-  EnableTemporaryGuesses: import_zod.z.boolean(),
-  ShowFlags: import_zod.z.boolean(),
-  ShowStreamOverlay: import_zod.z.boolean()
+  mapIdentifier: import_zod.z.string(),
+  streamer: import_zod.z.string(),
+  installedFlagPacks: import_zod.z.string(),
+  gameMode: import_zod.z.string(),
+  isUSStreak: import_zod.z.boolean(),
+  temporaryGuesses: import_zod.z.boolean(),
+  showFlags: import_zod.z.boolean(),
+  showBorders: import_zod.z.boolean(),
+  showStreamOverlay: import_zod.z.boolean()
 });
 const MapGameSettings = import_zod.z.object({
   MapID: import_zod.z.string(),

@@ -437,16 +437,17 @@ export const Color = SendingBase.extend({
 
 // TODO: add all settings and maybe with show option
 export const MapOptions = z.object({
-    MapIdentifier: z.string(),
-    Streamer: z.string(),
+    mapIdentifier: z.string(),
+    streamer: z.string(),
     // not sure
-    InstalledFlagPacks: z.array(z.string()),
+    installedFlagPacks: z.string(),
     // convert to enum later
-    GameMode: z.string(),
-    IsUSStreak: z.boolean(),
-    EnableTemporaryGuesses: z.boolean(),
-    ShowFlags: z.boolean(),
-    ShowStreamOverlay: z.boolean(),
+    gameMode: z.string(),
+    isUSStreak: z.boolean(),
+    temporaryGuesses: z.boolean(),
+    showFlags: z.boolean(),
+    showBorders: z.boolean(),
+    showStreamOverlay: z.boolean(),
 })
 
 

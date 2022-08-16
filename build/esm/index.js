@@ -258,14 +258,15 @@ const Color = SendingBase.extend({
   color: z.string()
 });
 const MapOptions = z.object({
-  MapIdentifier: z.string(),
-  Streamer: z.string(),
-  InstalledFlagPacks: z.array(z.string()),
-  GameMode: z.string(),
-  IsUSStreak: z.boolean(),
-  EnableTemporaryGuesses: z.boolean(),
-  ShowFlags: z.boolean(),
-  ShowStreamOverlay: z.boolean()
+  mapIdentifier: z.string(),
+  streamer: z.string(),
+  installedFlagPacks: z.string(),
+  gameMode: z.string(),
+  isUSStreak: z.boolean(),
+  temporaryGuesses: z.boolean(),
+  showFlags: z.boolean(),
+  showBorders: z.boolean(),
+  showStreamOverlay: z.boolean()
 });
 const MapGameSettings = z.object({
   MapID: z.string(),
