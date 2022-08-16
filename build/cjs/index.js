@@ -258,12 +258,14 @@ const Color = SendingBase.extend({
   color: import_zod.z.string()
 });
 const StreamerSettings = import_zod.z.object({
-  borders: import_zod.z.boolean(),
-  flags: import_zod.z.boolean(),
-  streamOverlay: import_zod.z.boolean(),
-  borderAdmin: import_zod.z.boolean(),
-  temporaryGuesses: import_zod.z.boolean(),
-  streamer: import_zod.z.string()
+  MapIdentifier: import_zod.z.string(),
+  Streamer: import_zod.z.string(),
+  InstalledFlagPacks: import_zod.z.array(import_zod.z.string()),
+  GameMode: import_zod.z.string(),
+  IsUSStreak: import_zod.z.boolean(),
+  EnableTemporaryGuesses: import_zod.z.boolean(),
+  ShowFlags: import_zod.z.boolean(),
+  ShowStreamOverlay: import_zod.z.boolean()
 });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

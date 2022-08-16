@@ -223,12 +223,14 @@ const Color = SendingBase.extend({
   color: z.string()
 });
 const StreamerSettings = z.object({
-  borders: z.boolean(),
-  flags: z.boolean(),
-  streamOverlay: z.boolean(),
-  borderAdmin: z.boolean(),
-  temporaryGuesses: z.boolean(),
-  streamer: z.string()
+  MapIdentifier: z.string(),
+  Streamer: z.string(),
+  InstalledFlagPacks: z.array(z.string()),
+  GameMode: z.string(),
+  IsUSStreak: z.boolean(),
+  EnableTemporaryGuesses: z.boolean(),
+  ShowFlags: z.boolean(),
+  ShowStreamOverlay: z.boolean()
 });
 export {
   Color,

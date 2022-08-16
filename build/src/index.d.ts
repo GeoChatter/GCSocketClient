@@ -186,24 +186,30 @@ export declare const Color: z.ZodObject<z.extendShape<{
     color: string;
 }>;
 export declare const StreamerSettings: z.ZodObject<{
-    borders: z.ZodBoolean;
-    flags: z.ZodBoolean;
-    streamOverlay: z.ZodBoolean;
-    borderAdmin: z.ZodBoolean;
-    temporaryGuesses: z.ZodBoolean;
-    streamer: z.ZodString;
+    MapIdentifier: z.ZodString;
+    Streamer: z.ZodString;
+    InstalledFlagPacks: z.ZodArray<z.ZodString, "many">;
+    GameMode: z.ZodString;
+    IsUSStreak: z.ZodBoolean;
+    EnableTemporaryGuesses: z.ZodBoolean;
+    ShowFlags: z.ZodBoolean;
+    ShowStreamOverlay: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
-    borders: boolean;
-    flags: boolean;
-    streamOverlay: boolean;
-    borderAdmin: boolean;
-    temporaryGuesses: boolean;
-    streamer: string;
+    MapIdentifier: string;
+    Streamer: string;
+    InstalledFlagPacks: string[];
+    GameMode: string;
+    IsUSStreak: boolean;
+    EnableTemporaryGuesses: boolean;
+    ShowFlags: boolean;
+    ShowStreamOverlay: boolean;
 }, {
-    borders: boolean;
-    flags: boolean;
-    streamOverlay: boolean;
-    borderAdmin: boolean;
-    temporaryGuesses: boolean;
-    streamer: string;
+    MapIdentifier: string;
+    Streamer: string;
+    InstalledFlagPacks: string[];
+    GameMode: string;
+    IsUSStreak: boolean;
+    EnableTemporaryGuesses: boolean;
+    ShowFlags: boolean;
+    ShowStreamOverlay: boolean;
 }>;
