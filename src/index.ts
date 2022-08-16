@@ -470,9 +470,7 @@ export const MapOptions = z.object({
     showFlags: z.boolean(),
     showBorders: z.boolean(),
     showStreamOverlay: z.boolean(),
-}).nullable()
-
-
+})
 export const MapGameSettings = z.object({
     mapID: z.number(),
     mapName: z.string(),
