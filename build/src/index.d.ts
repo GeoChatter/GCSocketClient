@@ -1,11 +1,12 @@
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod";
+export { z } from "zod";
 interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof StreamerSettings>) => any;
     onSuccessfulGuess?: () => any;
     onFailedGuess?: (error: string, text?: string) => any;
 }
-export default class GCSignalRClient {
+export declare class GCSignalRClient {
     #private;
     connection: signalR.HubConnection;
     private listeners?;
@@ -63,7 +64,32 @@ export default class GCSignalRClient {
      */
     sendColor(data: z.infer<typeof Color>): Promise<void>;
 }
-declare const Guess: z.ZodObject<z.extendShape<{
+export declare const SendingBase: z.ZodObject<{
+    bot: z.ZodString;
+    tkn: z.ZodString;
+    id: z.ZodString;
+    name: z.ZodString;
+    sourcePlatform: z.ZodEnum<["YouTube", "Twitch"]>;
+    display: z.ZodString;
+    pic: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+}, {
+    bot: string;
+    tkn: string;
+    id: string;
+    name: string;
+    sourcePlatform: "YouTube" | "Twitch";
+    display: string;
+    pic: string;
+}>;
+export declare const Guess: z.ZodObject<z.extendShape<{
     bot: z.ZodString;
     tkn: z.ZodString;
     id: z.ZodString;
@@ -101,7 +127,7 @@ declare const Guess: z.ZodObject<z.extendShape<{
     isTemporary: boolean;
     isRandom: boolean;
 }>;
-declare const Flag: z.ZodObject<z.extendShape<{
+export declare const Flag: z.ZodObject<z.extendShape<{
     bot: z.ZodString;
     tkn: z.ZodString;
     id: z.ZodString;
@@ -130,7 +156,7 @@ declare const Flag: z.ZodObject<z.extendShape<{
     pic: string;
     flag: string;
 }>;
-declare const Color: z.ZodObject<z.extendShape<{
+export declare const Color: z.ZodObject<z.extendShape<{
     bot: z.ZodString;
     tkn: z.ZodString;
     id: z.ZodString;
@@ -159,7 +185,7 @@ declare const Color: z.ZodObject<z.extendShape<{
     pic: string;
     color: string;
 }>;
-declare const StreamerSettings: z.ZodObject<{
+export declare const StreamerSettings: z.ZodObject<{
     borders: z.ZodBoolean;
     flags: z.ZodBoolean;
     streamOverlay: z.ZodBoolean;
@@ -181,4 +207,3 @@ declare const StreamerSettings: z.ZodObject<{
     temporaryGuesses: boolean;
     streamer: string;
 }>;
-export {};

@@ -24,11 +24,18 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var src_exports = {};
 __export(src_exports, {
-  default: () => GCSignalRClient
+  Color: () => Color,
+  Flag: () => Flag,
+  GCSignalRClient: () => GCSignalRClient,
+  Guess: () => Guess,
+  SendingBase: () => SendingBase,
+  StreamerSettings: () => StreamerSettings,
+  z: () => import_zod2.z
 });
 module.exports = __toCommonJS(src_exports);
 var signalR = __toESM(require("@microsoft/signalr"));
 var import_zod = require("zod");
+var import_zod2 = require("zod");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;
@@ -259,5 +266,13 @@ const StreamerSettings = import_zod.z.object({
   streamer: import_zod.z.string()
 });
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {});
+0 && (module.exports = {
+  Color,
+  Flag,
+  GCSignalRClient,
+  Guess,
+  SendingBase,
+  StreamerSettings,
+  z
+});
 //# sourceMappingURL=index.js.map

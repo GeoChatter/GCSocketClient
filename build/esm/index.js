@@ -1,5 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
+import { z as z2 } from "zod";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 class GCSignalRClient {
   connection;
@@ -230,6 +231,12 @@ const StreamerSettings = z.object({
   streamer: z.string()
 });
 export {
-  GCSignalRClient as default
+  Color,
+  Flag,
+  GCSignalRClient,
+  Guess,
+  SendingBase,
+  StreamerSettings,
+  z2 as z
 };
 //# sourceMappingURL=index.js.map
