@@ -28,10 +28,12 @@ __export(src_exports, {
   Flag: () => Flag,
   GCSocketClient: () => GCSocketClient,
   Guess: () => Guess,
+  MapGameEndResult: () => MapGameEndResult,
   MapGameSettings: () => MapGameSettings,
   MapOptions: () => MapOptions,
   MapRoundResult: () => MapRoundResult,
   MapRoundSettings: () => MapRoundSettings,
+  PlayerBase: () => PlayerBase,
   SendingBase: () => SendingBase,
   z: () => import_zod2.z
 });
@@ -128,13 +130,23 @@ class GCSocketClient {
     });
   }
   #listenToRoundEnd() {
-    this.connection.on("EndRound", () => {
-      this.listeners?.onRoundEnd?.();
+    this.connection.on("EndRound", (data) => {
+      const res = MapRoundResult.safeParse(data);
+      if (res.success) {
+        this.listeners?.onRoundEnd?.(res.data);
+      } else {
+        console.error(res.error);
+      }
     });
   }
   #listenToGameEnd() {
-    this.connection.on("EndGame", () => {
-      this.listeners?.onGameEnd?.();
+    this.connection.on("EndGame", (data) => {
+      const res = MapGameEndResult.safeParse(data);
+      if (res.success) {
+        this.listeners?.onGameEnd?.(res.data);
+      } else {
+        console.error(res.error);
+      }
     });
   }
   #listenToGameExit() {
@@ -313,7 +325,7 @@ const MapOptions = import_zod.z.object({
   showStreamOverlay: import_zod.z.boolean()
 });
 const MapGameSettings = import_zod.z.object({
-  mapID: import_zod.z.string(),
+  mapID: import_zod.z.number(),
   mapName: import_zod.z.string(),
   forbidMoving: import_zod.z.boolean(),
   forbidRotating: import_zod.z.boolean(),
@@ -325,21 +337,26 @@ const MapGameSettings = import_zod.z.object({
   timeLimit: import_zod.z.number(),
   streakType: import_zod.z.string()
 });
-const MapRoundResult = import_zod.z.object({
+const PlayerBase = import_zod.z.object({
   displayName: import_zod.z.string(),
   userName: import_zod.z.string(),
   profilePicUrl: import_zod.z.string().url(),
-  wasRandom: import_zod.z.boolean(),
   score: import_zod.z.number(),
   distance: import_zod.z.number(),
   timeTaken: import_zod.z.number(),
   streak: import_zod.z.number(),
-  countryCode: import_zod.z.string(),
-  exactCountryCode: import_zod.z.string(),
   guessCount: import_zod.z.number(),
-  isStreamerResult: import_zod.z.boolean(),
-  guessedBefore: import_zod.z.boolean()
+  isStreamerResult: import_zod.z.boolean()
 });
+const MapRoundResult = import_zod.z.array(PlayerBase.extend(
+  {
+    guessedBefore: import_zod.z.boolean(),
+    exactCountryCode: import_zod.z.string(),
+    countryCode: import_zod.z.string(),
+    wasRandom: import_zod.z.boolean()
+  }
+));
+const MapGameEndResult = import_zod.z.array(PlayerBase);
 const MapRoundSettings = import_zod.z.object({
   roundNumber: import_zod.z.number(),
   isMultiGuess: import_zod.z.boolean(),
@@ -351,10 +368,12 @@ const MapRoundSettings = import_zod.z.object({
   Flag,
   GCSocketClient,
   Guess,
+  MapGameEndResult,
   MapGameSettings,
   MapOptions,
   MapRoundResult,
   MapRoundSettings,
+  PlayerBase,
   SendingBase,
   z
 });

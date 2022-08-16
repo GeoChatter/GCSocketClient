@@ -90,13 +90,23 @@ class GCSocketClient {
     });
   }
   #listenToRoundEnd() {
-    this.connection.on("EndRound", () => {
-      this.listeners?.onRoundEnd?.();
+    this.connection.on("EndRound", (data) => {
+      const res = MapRoundResult.safeParse(data);
+      if (res.success) {
+        this.listeners?.onRoundEnd?.(res.data);
+      } else {
+        console.error(res.error);
+      }
     });
   }
   #listenToGameEnd() {
-    this.connection.on("EndGame", () => {
-      this.listeners?.onGameEnd?.();
+    this.connection.on("EndGame", (data) => {
+      const res = MapGameEndResult.safeParse(data);
+      if (res.success) {
+        this.listeners?.onGameEnd?.(res.data);
+      } else {
+        console.error(res.error);
+      }
     });
   }
   #listenToGameExit() {
@@ -275,7 +285,7 @@ const MapOptions = z.object({
   showStreamOverlay: z.boolean()
 });
 const MapGameSettings = z.object({
-  mapID: z.string(),
+  mapID: z.number(),
   mapName: z.string(),
   forbidMoving: z.boolean(),
   forbidRotating: z.boolean(),
@@ -287,21 +297,26 @@ const MapGameSettings = z.object({
   timeLimit: z.number(),
   streakType: z.string()
 });
-const MapRoundResult = z.object({
+const PlayerBase = z.object({
   displayName: z.string(),
   userName: z.string(),
   profilePicUrl: z.string().url(),
-  wasRandom: z.boolean(),
   score: z.number(),
   distance: z.number(),
   timeTaken: z.number(),
   streak: z.number(),
-  countryCode: z.string(),
-  exactCountryCode: z.string(),
   guessCount: z.number(),
-  isStreamerResult: z.boolean(),
-  guessedBefore: z.boolean()
+  isStreamerResult: z.boolean()
 });
+const MapRoundResult = z.array(PlayerBase.extend(
+  {
+    guessedBefore: z.boolean(),
+    exactCountryCode: z.string(),
+    countryCode: z.string(),
+    wasRandom: z.boolean()
+  }
+));
+const MapGameEndResult = z.array(PlayerBase);
 const MapRoundSettings = z.object({
   roundNumber: z.number(),
   isMultiGuess: z.boolean(),
@@ -312,10 +327,12 @@ export {
   Flag,
   GCSocketClient,
   Guess,
+  MapGameEndResult,
   MapGameSettings,
   MapOptions,
   MapRoundResult,
   MapRoundSettings,
+  PlayerBase,
   SendingBase,
   z2 as z
 };

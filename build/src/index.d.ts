@@ -7,8 +7,8 @@ interface Listeners {
     onFailedGuess?: (error: string, text?: string) => any;
     onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any;
     onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any;
-    onRoundEnd?: () => any;
-    onGameEnd?: () => any;
+    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => any;
+    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => any;
     onGameExit?: () => any;
 }
 export declare class GCSocketClient {
@@ -225,7 +225,7 @@ export declare const MapOptions: z.ZodObject<{
     showStreamOverlay: boolean;
 }>;
 export declare const MapGameSettings: z.ZodObject<{
-    mapID: z.ZodString;
+    mapID: z.ZodNumber;
     mapName: z.ZodString;
     forbidMoving: z.ZodBoolean;
     forbidRotating: z.ZodBoolean;
@@ -238,7 +238,7 @@ export declare const MapGameSettings: z.ZodObject<{
     streakType: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     gameMode: string;
-    mapID: string;
+    mapID: number;
     mapName: string;
     forbidMoving: boolean;
     forbidRotating: boolean;
@@ -250,7 +250,7 @@ export declare const MapGameSettings: z.ZodObject<{
     streakType: string;
 }, {
     gameMode: string;
-    mapID: string;
+    mapID: number;
     mapName: string;
     forbidMoving: boolean;
     forbidRotating: boolean;
@@ -261,49 +261,112 @@ export declare const MapGameSettings: z.ZodObject<{
     timeLimit: number;
     streakType: string;
 }>;
-export declare const MapRoundResult: z.ZodObject<{
+export declare const PlayerBase: z.ZodObject<{
     displayName: z.ZodString;
     userName: z.ZodString;
     profilePicUrl: z.ZodString;
-    wasRandom: z.ZodBoolean;
     score: z.ZodNumber;
     distance: z.ZodNumber;
     timeTaken: z.ZodNumber;
     streak: z.ZodNumber;
-    countryCode: z.ZodString;
-    exactCountryCode: z.ZodString;
     guessCount: z.ZodNumber;
     isStreamerResult: z.ZodBoolean;
-    guessedBefore: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
     displayName: string;
     userName: string;
     profilePicUrl: string;
-    wasRandom: boolean;
     score: number;
     distance: number;
     timeTaken: number;
     streak: number;
-    countryCode: string;
-    exactCountryCode: string;
     guessCount: number;
     isStreamerResult: boolean;
-    guessedBefore: boolean;
 }, {
     displayName: string;
     userName: string;
     profilePicUrl: string;
-    wasRandom: boolean;
     score: number;
     distance: number;
     timeTaken: number;
     streak: number;
-    countryCode: string;
-    exactCountryCode: string;
+    guessCount: number;
+    isStreamerResult: boolean;
+}>;
+export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
+    displayName: z.ZodString;
+    userName: z.ZodString;
+    profilePicUrl: z.ZodString;
+    score: z.ZodNumber;
+    distance: z.ZodNumber;
+    timeTaken: z.ZodNumber;
+    streak: z.ZodNumber;
+    guessCount: z.ZodNumber;
+    isStreamerResult: z.ZodBoolean;
+}, {
+    guessedBefore: z.ZodBoolean;
+    exactCountryCode: z.ZodString;
+    countryCode: z.ZodString;
+    wasRandom: z.ZodBoolean;
+}>, "strip", z.ZodTypeAny, {
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
     guessCount: number;
     isStreamerResult: boolean;
     guessedBefore: boolean;
-}>;
+    exactCountryCode: string;
+    countryCode: string;
+    wasRandom: boolean;
+}, {
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
+    guessCount: number;
+    isStreamerResult: boolean;
+    guessedBefore: boolean;
+    exactCountryCode: string;
+    countryCode: string;
+    wasRandom: boolean;
+}>, "many">;
+export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
+    displayName: z.ZodString;
+    userName: z.ZodString;
+    profilePicUrl: z.ZodString;
+    score: z.ZodNumber;
+    distance: z.ZodNumber;
+    timeTaken: z.ZodNumber;
+    streak: z.ZodNumber;
+    guessCount: z.ZodNumber;
+    isStreamerResult: z.ZodBoolean;
+}, "strip", z.ZodTypeAny, {
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
+    guessCount: number;
+    isStreamerResult: boolean;
+}, {
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
+    guessCount: number;
+    isStreamerResult: boolean;
+}>, "many">;
 export declare const MapRoundSettings: z.ZodObject<{
     roundNumber: z.ZodNumber;
     isMultiGuess: z.ZodBoolean;

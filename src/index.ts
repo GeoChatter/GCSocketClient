@@ -11,10 +11,14 @@ interface Listeners {
     onFailedGuess?: (error: string, text?: string) => any,
     onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any,
     onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any,
-    onRoundEnd?: () => any,
-    onGameEnd?: () => any,
+    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => any,
+    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => any,
     onGameExit?: () => any,
 }
+//END GAME
+// {"type":1,"target":"EndGame","arguments":[[{"displayName":"rhinoooo_","userName":"rhinoooo_","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/90323d58-8ce7-4e9a-9128-8fe46bacc4dd-profile_image-300x300.png","wasRandom":false,"score":4997,"distance":0.8161156737972088,"timeTaken":14779,"streak":1,"countryCode":null,"exactCountryCode":null,"guessCount":1,"isStreamerResult":false,"guessedBefore":false},{"displayName":"Soeren_______","userName":"soeren_______","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/b069cbe1-b70a-4b54-b8bb-b4d928bff8ba-profile_image-300x300.png","wasRandom":false,"score":4643,"distance":12476.826501381793,"timeTaken":52130,"streak":1,"countryCode":null,"exactCountryCode":null,"guessCount":2,"isStreamerResult":false,"guessedBefore":false},{"displayName":"GeoChatter","userName":"geochatter","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/73797ad7-6d0e-43ec-82cb-6be968562f86-profile_image-300x300.png","wasRandom":false,"score":971,"distance":36192.18396014681,"timeTaken":132966,"streak":0,"countryCode":null,"exactCountryCode":null,"guessCount":5,"isStreamerResult":true,"guessedBefore":false}]]}
+
+
 
 // helper to allow sleeping 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -167,12 +171,18 @@ export class GCSocketClient {
     }
     /**
      * It listens to the server for the "EndRound" event, and when it receives it, it calls the onRoundEnd
-     * function in the listeners object
+     * function in the listeners object with the MapRoundEnd data from the server
      */
     #listenToRoundEnd() {
-        this.connection.on("EndRound", () => {
+        this.connection.on("EndRound", (data: unknown) => {
 
-            this.listeners?.onRoundEnd?.()
+            const res = MapRoundResult.safeParse(data)
+            if (res.success) {
+                this.listeners?.onRoundEnd?.(res.data)
+            }
+            else {
+                console.error(res.error)
+            }
 
         })
     }
@@ -181,14 +191,20 @@ export class GCSocketClient {
      * onGameEnd listener
      */
     /**
-     * It listens to the server for the "EndGame" event, and when it receives it, it calls the onGameEnd
+     * It listens to the server for the "EndGame" event, and when it receives it, it calls the onGameEnd with the data with the game end result
      * listener
      */
     #listenToGameEnd() {
-        this.connection.on("EndGame", () => {
+        this.connection.on("EndGame", (data: unknown) => {
 
-            this.listeners?.onGameEnd?.()
 
+            const res = MapGameEndResult.safeParse(data)
+            if (res.success) {
+                this.listeners?.onGameEnd?.(res.data)
+            }
+            else {
+                console.error(res.error)
+            }
         })
     }
     /**
@@ -458,7 +474,7 @@ export const MapOptions = z.object({
 
 
 export const MapGameSettings = z.object({
-    mapID: z.string(),
+    mapID: z.number(),
     mapName: z.string(),
     forbidMoving: z.boolean(),
     forbidRotating: z.boolean(),
@@ -471,21 +487,27 @@ export const MapGameSettings = z.object({
     streakType: z.string(),
 })
 
-export const MapRoundResult = z.object({
+export const PlayerBase = z.object({
     displayName: z.string(),
     userName: z.string(),
     profilePicUrl: z.string().url(),
-    wasRandom: z.boolean(),
     score: z.number(),
     distance: z.number(),
     timeTaken: z.number(),
     streak: z.number(),
-    countryCode: z.string(),
-    exactCountryCode: z.string(),
     guessCount: z.number(),
     isStreamerResult: z.boolean(),
-    guessedBefore: z.boolean()
 })
+export const MapRoundResult = z.array(PlayerBase.extend({
+    guessedBefore: z.boolean(),
+    exactCountryCode: z.string(),
+    countryCode: z.string(),
+    wasRandom: z.boolean(),
+}
+))
+
+export const MapGameEndResult = z.array(PlayerBase)
+
 export const MapRoundSettings = z.object({
     roundNumber: z.number(),
     isMultiGuess: z.boolean(),
