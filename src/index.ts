@@ -75,9 +75,14 @@ export class GCSocketClient {
             console.warn("don't use start again! use reconnect instead")
         }
         await this.connection.start()
-        this.#logInToMap()
+        await this.#logInToMap()
         this.#listenToStreamerSettings()
         this.#listenToProblems()
+        this.#listenToGameStart()
+        this.#listenToRoundStart()
+        this.#listenToRoundEnd()
+        this.#listenToGameEnd()
+        this.#listenToGameExit()
         this.running = true
     }
 
