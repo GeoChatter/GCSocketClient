@@ -437,7 +437,8 @@ export const Color = SendingBase.extend({
 
 // TODO: add all settings and maybe with show option
 export const MapOptions = z.object({
-    mapIdentifier: z.string(),
+    mapIdentifier: z.string().optional(),
+    botname: z.string().optional(),
     streamer: z.string(),
     // not sure
     installedFlagPacks: z.string(),

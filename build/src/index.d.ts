@@ -191,7 +191,8 @@ export declare const Color: z.ZodObject<z.extendShape<{
     color: string;
 }>;
 export declare const MapOptions: z.ZodObject<{
-    mapIdentifier: z.ZodString;
+    mapIdentifier: z.ZodOptional<z.ZodString>;
+    botname: z.ZodOptional<z.ZodString>;
     streamer: z.ZodString;
     installedFlagPacks: z.ZodString;
     gameMode: z.ZodString;
@@ -201,7 +202,8 @@ export declare const MapOptions: z.ZodObject<{
     showBorders: z.ZodBoolean;
     showStreamOverlay: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
-    mapIdentifier: string;
+    mapIdentifier?: string | undefined;
+    botname?: string | undefined;
     streamer: string;
     installedFlagPacks: string;
     gameMode: string;
@@ -211,7 +213,8 @@ export declare const MapOptions: z.ZodObject<{
     showBorders: boolean;
     showStreamOverlay: boolean;
 }, {
-    mapIdentifier: string;
+    mapIdentifier?: string | undefined;
+    botname?: string | undefined;
     streamer: string;
     installedFlagPacks: string;
     gameMode: string;
