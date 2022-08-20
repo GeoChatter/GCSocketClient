@@ -460,7 +460,8 @@ export const Color = SendingBase.extend({
 export const MapOptions = z.object({
     mapIdentifier: z.string().optional(),
     botname: z.string().nullish(),
-    streamer: z.string().optional(),
+    streamer: z.string().nullish(),
+    twitchChannelName: z.string().nullish(),
     // not sure
     installedFlagPacks: z.string(),
     // convert to enum later

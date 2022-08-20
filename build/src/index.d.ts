@@ -193,7 +193,8 @@ export declare const Color: z.ZodObject<z.extendShape<{
 export declare const MapOptions: z.ZodObject<{
     mapIdentifier: z.ZodOptional<z.ZodString>;
     botname: z.ZodNullable<z.ZodOptional<z.ZodString>>;
-    streamer: z.ZodOptional<z.ZodString>;
+    streamer: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    twitchChannelName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     installedFlagPacks: z.ZodString;
     gameMode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     isUSStreak: z.ZodBoolean;
@@ -204,7 +205,8 @@ export declare const MapOptions: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     mapIdentifier?: string | undefined;
     botname?: string | null | undefined;
-    streamer?: string | undefined;
+    streamer?: string | null | undefined;
+    twitchChannelName?: string | null | undefined;
     gameMode?: string | null | undefined;
     installedFlagPacks: string;
     isUSStreak: boolean;
@@ -215,7 +217,8 @@ export declare const MapOptions: z.ZodObject<{
 }, {
     mapIdentifier?: string | undefined;
     botname?: string | null | undefined;
-    streamer?: string | undefined;
+    streamer?: string | null | undefined;
+    twitchChannelName?: string | null | undefined;
     gameMode?: string | null | undefined;
     installedFlagPacks: string;
     isUSStreak: boolean;
