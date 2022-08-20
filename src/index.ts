@@ -460,11 +460,11 @@ export const Color = SendingBase.extend({
 export const MapOptions = z.object({
     mapIdentifier: z.string().optional(),
     botname: z.string().optional(),
-    streamer: z.string(),
+    streamer: z.string().optional(),
     // not sure
     installedFlagPacks: z.string(),
     // convert to enum later
-    gameMode: z.string(),
+    gameMode: z.string().optional(),
     isUSStreak: z.boolean(),
     temporaryGuesses: z.boolean(),
     showFlags: z.boolean(),
