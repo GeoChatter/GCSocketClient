@@ -320,7 +320,8 @@ const MapGameEndResult = z.array(PlayerBase);
 const MapRoundSettings = z.object({
   roundNumber: z.number(),
   isMultiGuess: z.boolean(),
-  startTime: z.string()
+  startTime: z.string(),
+  gameId: z.string()
 });
 export {
   Color,

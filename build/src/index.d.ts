@@ -371,12 +371,15 @@ export declare const MapRoundSettings: z.ZodObject<{
     roundNumber: z.ZodNumber;
     isMultiGuess: z.ZodBoolean;
     startTime: z.ZodString;
+    gameId: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
+    gameId: string;
 }, {
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
+    gameId: string;
 }>;
