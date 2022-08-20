@@ -192,10 +192,10 @@ export declare const Color: z.ZodObject<z.extendShape<{
 }>;
 export declare const MapOptions: z.ZodObject<{
     mapIdentifier: z.ZodOptional<z.ZodString>;
-    botname: z.ZodOptional<z.ZodString>;
+    botname: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     streamer: z.ZodOptional<z.ZodString>;
     installedFlagPacks: z.ZodString;
-    gameMode: z.ZodOptional<z.ZodString>;
+    gameMode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     isUSStreak: z.ZodBoolean;
     temporaryGuesses: z.ZodBoolean;
     showFlags: z.ZodBoolean;
@@ -203,9 +203,9 @@ export declare const MapOptions: z.ZodObject<{
     showStreamOverlay: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
     mapIdentifier?: string | undefined;
-    botname?: string | undefined;
+    botname?: string | null | undefined;
     streamer?: string | undefined;
-    gameMode?: string | undefined;
+    gameMode?: string | null | undefined;
     installedFlagPacks: string;
     isUSStreak: boolean;
     temporaryGuesses: boolean;
@@ -214,9 +214,9 @@ export declare const MapOptions: z.ZodObject<{
     showStreamOverlay: boolean;
 }, {
     mapIdentifier?: string | undefined;
-    botname?: string | undefined;
+    botname?: string | null | undefined;
     streamer?: string | undefined;
-    gameMode?: string | undefined;
+    gameMode?: string | null | undefined;
     installedFlagPacks: string;
     isUSStreak: boolean;
     temporaryGuesses: boolean;

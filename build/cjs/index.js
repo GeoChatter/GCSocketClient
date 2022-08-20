@@ -314,10 +314,10 @@ const Color = SendingBase.extend({
 });
 const MapOptions = import_zod.z.object({
   mapIdentifier: import_zod.z.string().optional(),
-  botname: import_zod.z.string().optional(),
+  botname: import_zod.z.string().nullish(),
   streamer: import_zod.z.string().optional(),
   installedFlagPacks: import_zod.z.string(),
-  gameMode: import_zod.z.string().optional(),
+  gameMode: import_zod.z.string().nullish(),
   isUSStreak: import_zod.z.boolean(),
   temporaryGuesses: import_zod.z.boolean(),
   showFlags: import_zod.z.boolean(),
