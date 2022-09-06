@@ -341,7 +341,7 @@ const MapGameSettings = import_zod.z.object({
 const PlayerBase = import_zod.z.object({
   displayName: import_zod.z.string(),
   userName: import_zod.z.string(),
-  profilePicUrl: import_zod.z.string().url(),
+  profilePicUrl: import_zod.z.string(),
   score: import_zod.z.number(),
   distance: import_zod.z.number(),
   timeTaken: import_zod.z.number(),

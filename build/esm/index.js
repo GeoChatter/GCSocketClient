@@ -301,7 +301,7 @@ const MapGameSettings = z.object({
 const PlayerBase = z.object({
   displayName: z.string(),
   userName: z.string(),
-  profilePicUrl: z.string().url(),
+  profilePicUrl: z.string(),
   score: z.number(),
   distance: z.number(),
   timeTaken: z.number(),
