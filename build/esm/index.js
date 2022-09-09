@@ -322,7 +322,7 @@ const MapRoundSettings = z.object({
   roundNumber: z.number(),
   isMultiGuess: z.boolean(),
   startTime: z.string(),
-  gameId: z.string()
+  gameId: z.string().nullish()
 });
 export {
   Color,

@@ -362,7 +362,7 @@ const MapRoundSettings = import_zod.z.object({
   roundNumber: import_zod.z.number(),
   isMultiGuess: import_zod.z.boolean(),
   startTime: import_zod.z.string(),
-  gameId: import_zod.z.string()
+  gameId: import_zod.z.string().nullish()
 });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
