@@ -156,7 +156,7 @@ class GCSocketClient {
     if (typeof guessId === "number") {
       let state = await this.#getGuessState(guessId);
       let counter = 50;
-      while (state === "Submitted" || counter >= 0) {
+      while (state === "Submitted" && counter >= 0) {
         state = await this.#getGuessState(guessId);
         console.log(state);
         await sleep(300);
