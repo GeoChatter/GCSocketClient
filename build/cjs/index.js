@@ -196,7 +196,7 @@ class GCSocketClient {
     if (typeof guessId === "number") {
       let state = await this.#getGuessState(guessId);
       let counter = 50;
-      while (state === "Submitted" || counter <= 0) {
+      while (state === "Submitted" || counter >= 0) {
         state = await this.#getGuessState(guessId);
         console.log(state);
         await sleep(300);
@@ -346,6 +346,8 @@ const PlayerBase = import_zod.z.object({
   distance: import_zod.z.number(),
   timeTaken: import_zod.z.number(),
   streak: import_zod.z.number(),
+  playerFlagName: import_zod.z.string().nullish(),
+  playerFlag: import_zod.z.string().nullish(),
   guessCount: import_zod.z.number(),
   isStreamerResult: import_zod.z.boolean()
 });

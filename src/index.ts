@@ -286,7 +286,7 @@ export class GCSocketClient {
             let state: GuessState = await this.#getGuessState(guessId)
             // 50 might be to much
             let counter = 50
-            while (state === "Submitted" || counter <= 0) {
+            while (state === "Submitted" || counter >= 0) {
                 state = await this.#getGuessState(guessId)
                 console.log(state)
                 await sleep(300)
@@ -494,6 +494,8 @@ export const PlayerBase = z.object({
     distance: z.number(),
     timeTaken: z.number(),
     streak: z.number(),
+    playerFlagName: z.string().nullish(),
+    playerFlag: z.string().nullish(),
     guessCount: z.number(),
     isStreamerResult: z.boolean(),
 })

@@ -272,9 +272,13 @@ export declare const PlayerBase: z.ZodObject<{
     distance: z.ZodNumber;
     timeTaken: z.ZodNumber;
     streak: z.ZodNumber;
+    playerFlagName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    playerFlag: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     guessCount: z.ZodNumber;
     isStreamerResult: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -285,6 +289,8 @@ export declare const PlayerBase: z.ZodObject<{
     guessCount: number;
     isStreamerResult: boolean;
 }, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -303,6 +309,8 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     distance: z.ZodNumber;
     timeTaken: z.ZodNumber;
     streak: z.ZodNumber;
+    playerFlagName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    playerFlag: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     guessCount: z.ZodNumber;
     isStreamerResult: z.ZodBoolean;
 }, {
@@ -311,6 +319,8 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     countryCode: z.ZodString;
     wasRandom: z.ZodBoolean;
 }>, "strip", z.ZodTypeAny, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -325,6 +335,8 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     countryCode: string;
     wasRandom: boolean;
 }, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -347,9 +359,13 @@ export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
     distance: z.ZodNumber;
     timeTaken: z.ZodNumber;
     streak: z.ZodNumber;
+    playerFlagName: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    playerFlag: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     guessCount: z.ZodNumber;
     isStreamerResult: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -360,6 +376,8 @@ export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
     guessCount: number;
     isStreamerResult: boolean;
 }, {
+    playerFlagName?: string | null | undefined;
+    playerFlag?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
