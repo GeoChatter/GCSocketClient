@@ -195,11 +195,11 @@ class GCSocketClient {
       return;
     if (typeof guessId === "number") {
       let state = await this.#getGuessState(guessId);
-      let counter = 50;
+      let counter = 6;
       while (state === "Submitted" && counter >= 0) {
         state = await this.#getGuessState(guessId);
         console.log(state);
-        await sleep(300);
+        await sleep(500);
         counter = counter - 1;
       }
       if (counter <= 0) {

@@ -284,12 +284,11 @@ export class GCSocketClient {
         if (!checkGuess) return
         if (typeof guessId === "number") {
             let state: GuessState = await this.#getGuessState(guessId)
-            // 50 might be to much
-            let counter = 50
+            let counter = 6
             while (state === "Submitted" && counter >= 0) {
                 state = await this.#getGuessState(guessId)
                 console.log(state)
-                await sleep(300)
+                await sleep(500)
                 counter = counter - 1
             }
             if (counter <= 0) {
