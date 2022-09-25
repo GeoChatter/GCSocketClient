@@ -4,8 +4,8 @@ import * as signalR from '@microsoft/signalr';
 
 import { z } from "zod"
 
-import type { MockConnectionBuilder} from "./mock/MockConnectionBuilder"
-export { z } from "zod"
+import { MockConnectionBuilder } from "./mock/MockConnectionBuilder"
+export { z, MockConnectionBuilder }
 
 interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => void
@@ -39,7 +39,7 @@ export class GCSocketClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode: string, { connectionBuilder = new signalR.HubConnectionBuilder }: {connectionBuilder :signalR.HubConnectionBuilder | MockConnectionBuilder  }  , listeners?: Listeners) {
+    constructor(url: string, streamerCode: string, { connectionBuilder = new signalR.HubConnectionBuilder }: { connectionBuilder: signalR.HubConnectionBuilder | MockConnectionBuilder }, listeners?: Listeners) {
 
         const result = z.string().url().safeParse(url)
         if (result.success) {
@@ -229,7 +229,7 @@ export class GCSocketClient {
      * it also logs if signal r is reconnecting
      */
     #listenToProblems() {
-        this.connection.onreconnecting = (e:Error) => {
+        this.connection.onreconnecting = (e: Error) => {
             console.info("default reconnecting from singalR", e)
         }
         this.connection.onclose = (e: Error) => {
@@ -508,7 +508,7 @@ export const MapRoundResult = z.array(PlayerBase.extend({
     exactCountryCode: z.string().nullish(),
     countryCode: z.string().nullish(),
     wasRandom: z.boolean(),
-    gameId: z.string().nullish() 
+    gameId: z.string().nullish()
 }
 ))
 
