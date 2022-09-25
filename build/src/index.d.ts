@@ -1,19 +1,20 @@
 import * as signalR from '@microsoft/signalr';
 import { z } from "zod";
+import type { MockConnectionBuilder } from "./mock/MockConnectionBuilder";
 export { z } from "zod";
 interface Listeners {
-    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => any;
-    onSuccessfulGuess?: () => any;
-    onFailedGuess?: (error: string, text?: string) => any;
-    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any;
-    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any;
-    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => any;
-    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => any;
-    onGameExit?: () => any;
+    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => void;
+    onSuccessfulGuess?: () => void;
+    onFailedGuess?: (error: string, text?: string) => void;
+    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => void;
+    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => void;
+    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => void;
+    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => void;
+    onGameExit?: () => void;
 }
 export declare class GCSocketClient {
     #private;
-    connection: signalR.HubConnection;
+    connection: signalR.HubConnection | MockConnectionBuilder["connection"];
     private listeners?;
     private _streamerCode;
     private running;
@@ -23,7 +24,9 @@ export declare class GCSocketClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode: string, listeners?: Listeners);
+    constructor(url: string, streamerCode: string, { connectionBuilder }: {
+        connectionBuilder: signalR.HubConnectionBuilder | MockConnectionBuilder;
+    }, listeners?: Listeners);
     /**
      * It sets the streamer code and logs in to the map.
      * @param {string | undefined} streamerCode - The streamer code that you get from the streamer(used to be the bot name).
@@ -78,17 +81,17 @@ export declare const SendingBase: z.ZodObject<{
     display: z.ZodString;
     pic: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
 }, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -108,9 +111,9 @@ export declare const Guess: z.ZodObject<z.extendShape<{
     isTemporary: z.ZodBoolean;
     isRandom: z.ZodBoolean;
 }>, "strip", z.ZodTypeAny, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -120,9 +123,9 @@ export declare const Guess: z.ZodObject<z.extendShape<{
     isTemporary: boolean;
     isRandom: boolean;
 }, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -143,18 +146,18 @@ export declare const Flag: z.ZodObject<z.extendShape<{
 }, {
     flag: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
     flag: string;
 }, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -172,18 +175,18 @@ export declare const Color: z.ZodObject<z.extendShape<{
 }, {
     color: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
     color: string;
 }, {
+    id: string;
     bot: string;
     tkn: string;
-    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -233,7 +236,9 @@ export declare const MapGameSettings: z.ZodObject<{
     forbidMoving: z.ZodBoolean;
     forbidRotating: z.ZodBoolean;
     forbidZooming: z.ZodBoolean;
+    roundCount: z.ZodNumber;
     gameMode: z.ZodString;
+    gameType: z.ZodString;
     gameState: z.ZodString;
     isStreak: z.ZodBoolean;
     isInfinite: z.ZodBoolean;
@@ -246,6 +251,8 @@ export declare const MapGameSettings: z.ZodObject<{
     forbidMoving: boolean;
     forbidRotating: boolean;
     forbidZooming: boolean;
+    roundCount: number;
+    gameType: string;
     gameState: string;
     isStreak: boolean;
     isInfinite: boolean;
@@ -258,6 +265,8 @@ export declare const MapGameSettings: z.ZodObject<{
     forbidMoving: boolean;
     forbidRotating: boolean;
     forbidZooming: boolean;
+    roundCount: number;
+    gameType: string;
     gameState: string;
     isStreak: boolean;
     isInfinite: boolean;
@@ -315,12 +324,16 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     isStreamerResult: z.ZodBoolean;
 }, {
     guessedBefore: z.ZodBoolean;
-    exactCountryCode: z.ZodString;
-    countryCode: z.ZodString;
+    exactCountryCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    countryCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     wasRandom: z.ZodBoolean;
+    gameId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }>, "strip", z.ZodTypeAny, {
     playerFlagName?: string | null | undefined;
     playerFlag?: string | null | undefined;
+    exactCountryCode?: string | null | undefined;
+    countryCode?: string | null | undefined;
+    gameId?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -331,12 +344,13 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     guessCount: number;
     isStreamerResult: boolean;
     guessedBefore: boolean;
-    exactCountryCode: string;
-    countryCode: string;
     wasRandom: boolean;
 }, {
     playerFlagName?: string | null | undefined;
     playerFlag?: string | null | undefined;
+    exactCountryCode?: string | null | undefined;
+    countryCode?: string | null | undefined;
+    gameId?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -347,11 +361,9 @@ export declare const MapRoundResult: z.ZodArray<z.ZodObject<z.extendShape<{
     guessCount: number;
     isStreamerResult: boolean;
     guessedBefore: boolean;
-    exactCountryCode: string;
-    countryCode: string;
     wasRandom: boolean;
 }>, "many">;
-export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
+export declare const MapGameEndResult: z.ZodArray<z.ZodObject<z.extendShape<{
     displayName: z.ZodString;
     userName: z.ZodString;
     profilePicUrl: z.ZodString;
@@ -363,9 +375,18 @@ export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
     playerFlag: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     guessCount: z.ZodNumber;
     isStreamerResult: z.ZodBoolean;
-}, "strip", z.ZodTypeAny, {
+}, {
+    guessedBefore: z.ZodBoolean;
+    exactCountryCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    countryCode: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    wasRandom: z.ZodBoolean;
+    gameId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+}>, "strip", z.ZodTypeAny, {
     playerFlagName?: string | null | undefined;
     playerFlag?: string | null | undefined;
+    exactCountryCode?: string | null | undefined;
+    countryCode?: string | null | undefined;
+    gameId?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -375,9 +396,14 @@ export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
     streak: number;
     guessCount: number;
     isStreamerResult: boolean;
+    guessedBefore: boolean;
+    wasRandom: boolean;
 }, {
     playerFlagName?: string | null | undefined;
     playerFlag?: string | null | undefined;
+    exactCountryCode?: string | null | undefined;
+    countryCode?: string | null | undefined;
+    gameId?: string | null | undefined;
     displayName: string;
     userName: string;
     profilePicUrl: string;
@@ -387,19 +413,18 @@ export declare const MapGameEndResult: z.ZodArray<z.ZodObject<{
     streak: number;
     guessCount: number;
     isStreamerResult: boolean;
+    guessedBefore: boolean;
+    wasRandom: boolean;
 }>, "many">;
 export declare const MapRoundSettings: z.ZodObject<{
     roundNumber: z.ZodNumber;
     isMultiGuess: z.ZodBoolean;
     startTime: z.ZodString;
-    gameId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
-    gameId?: string | null | undefined;
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
 }, {
-    gameId?: string | null | undefined;
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;

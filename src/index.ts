@@ -1,19 +1,21 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import * as signalR from '@microsoft/signalr';
+
 import { z } from "zod"
 
+import type { MockConnectionBuilder} from "./mock/MockConnectionBuilder"
 export { z } from "zod"
 
 interface Listeners {
-    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => any
-    onSuccessfulGuess?: () => any,
-    onFailedGuess?: (error: string, text?: string) => any,
-    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => any,
-    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => any,
-    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => any,
-    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => any,
-    onGameExit?: () => any,
+    onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => void
+    onSuccessfulGuess?: () => void,
+    onFailedGuess?: (error: string, text?: string) => void,
+    onGameStart?: (mapGameSettings: z.infer<typeof MapGameSettings>) => void,
+    onRoundStart?: (mapRoundStart: z.infer<typeof MapRoundSettings>) => void,
+    onRoundEnd?: (mapRoundResult: z.infer<typeof MapRoundResult>) => void,
+    onGameEnd?: (mapGameEndResult: z.infer<typeof MapGameEndResult>) => void,
+    onGameExit?: () => void,
 }
 //END GAME
 // {"type":1,"target":"EndGame","arguments":[[{"displayName":"rhinoooo_","userName":"rhinoooo_","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/90323d58-8ce7-4e9a-9128-8fe46bacc4dd-profile_image-300x300.png","wasRandom":false,"score":4997,"distance":0.8161156737972088,"timeTaken":14779,"streak":1,"countryCode":null,"exactCountryCode":null,"guessCount":1,"isStreamerResult":false,"guessedBefore":false},{"displayName":"Soeren_______","userName":"soeren_______","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/b069cbe1-b70a-4b54-b8bb-b4d928bff8ba-profile_image-300x300.png","wasRandom":false,"score":4643,"distance":12476.826501381793,"timeTaken":52130,"streak":1,"countryCode":null,"exactCountryCode":null,"guessCount":2,"isStreamerResult":false,"guessedBefore":false},{"displayName":"GeoChatter","userName":"geochatter","profilePicUrl":"https://static-cdn.jtvnw.net/jtv_user_pictures/73797ad7-6d0e-43ec-82cb-6be968562f86-profile_image-300x300.png","wasRandom":false,"score":971,"distance":36192.18396014681,"timeTaken":132966,"streak":0,"countryCode":null,"exactCountryCode":null,"guessCount":5,"isStreamerResult":true,"guessedBefore":false}]]}
@@ -23,8 +25,9 @@ interface Listeners {
 // helper to allow sleeping 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
+
 export class GCSocketClient {
-    connection: signalR.HubConnection
+    connection: signalR.HubConnection | MockConnectionBuilder["connection"]
     private listeners?: Listeners
     private _streamerCode: string
     private running = false
@@ -36,10 +39,11 @@ export class GCSocketClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode: string, listeners?: Listeners) {
+    constructor(url: string, streamerCode: string, { connectionBuilder = new signalR.HubConnectionBuilder }: {connectionBuilder :signalR.HubConnectionBuilder | MockConnectionBuilder  }  , listeners?: Listeners) {
+
         const result = z.string().url().safeParse(url)
         if (result.success) {
-            this.connection = new signalR.HubConnectionBuilder().withUrl(result.data, {}).build();
+            this.connection = connectionBuilder.withUrl(result.data, {}).build();
             this._streamerCode = streamerCode
             this.listeners = listeners
             this.#start()
@@ -212,7 +216,6 @@ export class GCSocketClient {
      */
     #listenToGameExit() {
         this.connection.on("ExitGame", () => {
-
             this.listeners?.onGameExit?.()
 
         })
@@ -226,10 +229,10 @@ export class GCSocketClient {
      * it also logs if signal r is reconnecting
      */
     #listenToProblems() {
-        this.connection.onreconnecting = (e) => {
+        this.connection.onreconnecting = (e:Error) => {
             console.info("default reconnecting from singalR", e)
         }
-        this.connection.onclose = (e) => {
+        this.connection.onclose = (e: Error) => {
             console.warn("signalR connection closed trying to reconnect manually", e)
             setTimeout(() => { this.reconnect() }, 1000)
         }
@@ -276,10 +279,10 @@ export class GCSocketClient {
             console.log("not connected trying to reconnect before sending guess")
             await this.reconnect().then(async () => {
                 console.log("sending guess after reconnect")
-                guessId = await this.connection.invoke("SendGuessToClients", guess)
+                guessId = await this.connection.invoke("SendGuessToClients", guess) as number;
             })
         } else {
-            guessId = await this.connection.invoke("SendGuessToClients", guess)
+            guessId = await this.connection.invoke("SendGuessToClients", guess) as number;
         }
         if (!checkGuess) return
         if (typeof guessId === "number") {
@@ -338,7 +341,7 @@ export class GCSocketClient {
      * @returns GuessState
      */
     async #getGuessState(id: number): Promise<GuessState> {
-        return await this.connection.invoke("GetGuessState", id)
+        return await this.connection.invoke("GetGuessState", id) as GuessState
     }
 }
 
@@ -477,7 +480,9 @@ export const MapGameSettings = z.object({
     forbidMoving: z.boolean(),
     forbidRotating: z.boolean(),
     forbidZooming: z.boolean(),
+    roundCount: z.number(),
     gameMode: z.string(),
+    gameType: z.string(),
     gameState: z.string(),
     isStreak: z.boolean(),
     isInfinite: z.boolean(),
@@ -500,17 +505,18 @@ export const PlayerBase = z.object({
 })
 export const MapRoundResult = z.array(PlayerBase.extend({
     guessedBefore: z.boolean(),
-    exactCountryCode: z.string(),
-    countryCode: z.string(),
+    exactCountryCode: z.string().nullish(),
+    countryCode: z.string().nullish(),
     wasRandom: z.boolean(),
+    gameId: z.string().nullish() 
 }
 ))
 
-export const MapGameEndResult = z.array(PlayerBase)
+export const MapGameEndResult = MapRoundResult
+
 
 export const MapRoundSettings = z.object({
     roundNumber: z.number(),
     isMultiGuess: z.boolean(),
     startTime: z.string(),
-    gameId: z.string().nullish()
 })

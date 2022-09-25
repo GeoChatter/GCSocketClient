@@ -1,0 +1,36 @@
+declare const _default: ({
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    playerFlagName: string;
+    playerFlag: string;
+    wasRandom: boolean;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
+    countryCode: string;
+    exactCountryCode: string;
+    guessCount: number;
+    isStreamerResult: boolean;
+    guessedBefore: boolean;
+    gameId: null;
+} | {
+    displayName: string;
+    userName: string;
+    profilePicUrl: string;
+    playerFlagName: string;
+    playerFlag: null;
+    wasRandom: boolean;
+    score: number;
+    distance: number;
+    timeTaken: number;
+    streak: number;
+    countryCode: string;
+    exactCountryCode: string;
+    guessCount: number;
+    isStreamerResult: boolean;
+    guessedBefore: boolean;
+    gameId: null;
+})[];
+export default _default;
