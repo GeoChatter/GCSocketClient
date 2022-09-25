@@ -13,7 +13,6 @@ export class MockConnectionBuilder {
         console.log("using MockConnectionBuilder")
     }
 
-
     registeredHandlers: { [key: string]: (data?: unknown) => void; } = {}
 
     connection = {

@@ -14,14 +14,14 @@ describe("init", () => {
 
 
     const connectionBuilder = new MockConnectionBuilder()
-    const client = new GCSocketClient("https://dev.geochatter.tv/guess/geoChatterHub", "code", { connectionBuilder }, {
+    const client = new GCSocketClient("https://dev.geochatter.tv/guess/geoChatterHub", "code", {
       onStreamerSettings,
       onGameStart,
       onRoundStart,
       onRoundEnd,
       onGameEnd,
       onGameExit
-    })
+    }, { connectionBuilder })
 
 
     vi.useFakeTimers()
