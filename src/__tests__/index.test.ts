@@ -21,7 +21,7 @@ describe("init", () => {
       onRoundEnd,
       onGameEnd,
       onGameExit
-    }, { connectionBuilder })
+    },  connectionBuilder )
 
 
     vi.useFakeTimers()

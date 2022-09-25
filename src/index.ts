@@ -39,7 +39,7 @@ export class GCSocketClient {
      * @param {string} [streamerCode] - The streamer code is the code that is used on the Server to send the Guess to the right client.
      * @param {Listeners} [listeners] - Listeners trigger a callback that should handle the app state on /map or in the twitch extension for example when streamerSettings change.
      */
-    constructor(url: string, streamerCode: string,  listeners: Listeners,{ connectionBuilder = new signalR.HubConnectionBuilder }: { connectionBuilder: signalR.HubConnectionBuilder | MockConnectionBuilder }) {
+    constructor(url: string, streamerCode: string, listeners: Listeners, connectionBuilder: signalR.HubConnectionBuilder | MockConnectionBuilder = new signalR.HubConnectionBuilder) {
 
         const result = z.string().url().safeParse(url)
         if (result.success) {

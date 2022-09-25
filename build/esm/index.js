@@ -5695,7 +5695,7 @@ var GCSocketClient = class {
   listeners;
   _streamerCode;
   running = false;
-  constructor(url, streamerCode, listeners, { connectionBuilder = new signalR.HubConnectionBuilder() }) {
+  constructor(url, streamerCode, listeners, connectionBuilder = new signalR.HubConnectionBuilder()) {
     const result = mod.string().url().safeParse(url);
     if (result.success) {
       this.connection = connectionBuilder.withUrl(result.data, {}).build();
