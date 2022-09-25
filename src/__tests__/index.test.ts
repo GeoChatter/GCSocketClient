@@ -25,10 +25,9 @@ describe("init", () => {
 
 
     vi.useFakeTimers()
-    it("map login should have been called with the correct code", () => {
+    it("map login should trigger streamer settings", () => {
       /* expect(client.connection.invoke).to */
-      expect(client.connection.invoke).toBeCalledWith("MapLogin", "code")
-      expect(client.connection.start).toBeCalledTimes(1)
+      expect(onStreamerSettings).toBeCalled();
     })
     it("onStreamerSettings should have been called with res from MapLogin", () => {
       expect(onStreamerSettings).toBeCalledWith(connectionBuilder.mapOptions)
@@ -36,15 +35,16 @@ describe("init", () => {
     describe("set streamer code", () => {
       client.streamerCode = "newCode"
       it("should call the map login with the new code", () => {
-        expect(client.connection.invoke).toBeCalledWith("MapLogin", "newCode")
+        expect(onStreamerSettings).toBeCalledTimes(2)
       })
     })
     describe("stopping connection", async () => {
       await client.stop()
       it("test reconnect", () => {
         // running timer before checking 
+        expect(client.connection.state).toBe("Closed")
         vi.advanceTimersToNextTimer()
-        expect(client.connection.start).toBeCalledTimes(2)
+        expect(client.connection.state).toBe("Connected")
       })
     })
 

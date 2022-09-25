@@ -1,4 +1,3 @@
-import { vi } from "vitest"
 import { z } from "zod"
 
 import { MapGameEndResult, MapGameSettings, MapOptions, MapRoundResult, MapRoundSettings  } from "../index";
@@ -18,29 +17,31 @@ export class MockConnectionBuilder {
     registeredHandlers: { [key: string]: (data?: unknown) => void; } = {}
 
     connection = {
-        state: "Connected",
+        state: "Closed",
 
-        start: vi.fn(),
-        stop: vi.fn(() => {
+        start: () => {this.connection.state = "Connected" },
+        stop: () => {
             this.connection.onclose(new Error("mock error"))
+            this.connection.state = "Closed"
             console.log("connection closed")
-        }),
-        on: vi.fn((method: string, func: (data: unknown) => void) => {
+        },
+        on: (method: string, func: (data: unknown) => void) => {
             this.registeredHandlers[method] = func
-        }),
+        },
 
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onclose: (e: Error) => { },
+        onclose: (e: Error) => {
+         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         onreconnecting: (e: Error) => { },
 
 
-        invoke: vi.fn((method: string, args: unknown): (z.infer<typeof MapOptions> | void) => {
+        invoke: (method: string, args: unknown): (z.infer<typeof MapOptions> | void) => {
             if (method === "MapLogin") {
                 // FIXME: RETURN REAL DATA HERE SOME DAY
                 return this.mapOptions
             }
-        })
+        }
 
     }
 
