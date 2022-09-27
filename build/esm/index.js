@@ -5621,7 +5621,7 @@ var fakeGameEndResults_default = [{ "displayName": "Cinnamonique", "userName": "
 var fakeGameSettings_default = { "mapID": 0, "mapName": "A Community World", "isInfinite": false, "isStreak": false, "gameType": "standard", "gameMode": "standard", "gameState": "started", "roundCount": 5, "timeLimit": 0, "forbidMoving": true, "forbidZooming": true, "forbidRotating": true, "streakType": "countrystreak" };
 
 // src/mock/fakeMapOptions.ts
-var fakeMapOptions_default = { "showStreamOverlay": false, "showFlags": false, "showBorders": true, "mapIdentifier": "GraphicGroupGoddart", "streamer": "56311e06acdaa11d50d8d141", "installedFlagPacks": "[]", "gameMode": "DEFAULT", "isUSStreak": false, "temporaryGuesses": true, "twitchChannelName": "Petery" };
+var fakeMapOptions_default = { "showStreamOverlay": true, "showFlags": true, "showBorders": true, "mapIdentifier": "GraphicGroupGoddart", "streamer": "56311e06acdaa11d50d8d141", "installedFlagPacks": "[]", "gameMode": "DEFAULT", "isUSStreak": false, "temporaryGuesses": true, "twitchChannelName": "Petery" };
 
 // src/mock/fakeRoundInfo.ts
 var fakeRoundInfo_default = { "roundNumber": 1, "isMultiGuess": false, "startTime": "2022-09-25T15:37:58.5715788+00:00" };
