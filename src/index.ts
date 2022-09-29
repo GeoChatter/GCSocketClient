@@ -5,7 +5,7 @@ import { z } from "zod";
 import { MockConnectionBuilder } from "./mock/MockConnectionBuilder";
 export { z, MockConnectionBuilder };
 
-interface Listeners {
+export interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => void;
     onSuccessfulGuess?: () => void;
     onFailedGuess?: (error: string, text?: string) => void;
@@ -431,7 +431,7 @@ function createErrorText(status: GuessState): string {
             return "You are banned by the streamer and not allowed participate in any games.";
         }
         case GuessState.BotNotFound: {
-            return "No ongoing game or round found";
+            return "Bot not found";
         }
         case GuessState.GuessedAlready: {
             return "Already sent a guess for the round!";
@@ -440,7 +440,7 @@ function createErrorText(status: GuessState): string {
             return "Invalid coordinates. Refresh the page.";
         }
         case GuessState.NoGame: {
-            return "No ongoing game found, try again later.";
+            return "No ongoing game or round found, try again later.";
         }
         case GuessState.NotFound: {
             return "Invalid user data. Refresh the page.";

@@ -2,7 +2,7 @@ import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
 import { MockConnectionBuilder } from "./mock/MockConnectionBuilder";
 export { z, MockConnectionBuilder };
-interface Listeners {
+export interface Listeners {
     onStreamerSettings?: (streamerSettings: z.infer<typeof MapOptions>) => void;
     onSuccessfulGuess?: () => void;
     onFailedGuess?: (error: string, text?: string) => void;

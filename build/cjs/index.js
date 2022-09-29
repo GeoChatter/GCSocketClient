@@ -11258,7 +11258,7 @@ function createErrorText(status) {
       return "You are banned by the streamer and not allowed participate in any games.";
     }
     case GuessState.BotNotFound: {
-      return "No ongoing game or round found";
+      return "Bot not found";
     }
     case GuessState.GuessedAlready: {
       return "Already sent a guess for the round!";
@@ -11267,7 +11267,7 @@ function createErrorText(status) {
       return "Invalid coordinates. Refresh the page.";
     }
     case GuessState.NoGame: {
-      return "No ongoing game found, try again later.";
+      return "No ongoing game or round found, try again later.";
     }
     case GuessState.NotFound: {
       return "Invalid user data. Refresh the page.";

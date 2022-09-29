@@ -90,4 +90,6 @@ export class MockConnectionBuilder {
   mapGameEndResult: z.infer<typeof MapGameEndResult> = fakeGameEndResults;
 
   mapRoundSettings: z.infer<typeof MapRoundSettings> = fakeRoundInfo;
+
+
 }
