@@ -1,5 +1,5 @@
 declare const _default: {
-    mapID: number;
+    mapID: string;
     mapName: string;
     isInfinite: boolean;
     isStreak: boolean;

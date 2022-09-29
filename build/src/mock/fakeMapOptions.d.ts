@@ -9,5 +9,7 @@ declare const _default: {
     isUSStreak: boolean;
     temporaryGuesses: boolean;
     twitchChannelName: string;
+    isInGame: boolean;
+    isInRound: boolean;
 };
 export default _default;

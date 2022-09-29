@@ -1,3 +1,13 @@
-export default { "roundNumber": 1, "isMultiGuess": false, "startTime": "2022-09-25T15:37:58.5715788+00:00" }
-
- 
+export default {
+  roundNumber: 1,
+  isMultiGuess: false,
+  startTime: "2022-09-25T15:37:58.5715788+00:00",
+  layers: ["OSM"],
+  is3dEnabled: true,
+  blackAndWhite: true,
+  blurry: true,
+  mirrored: true,
+  upsideDown: true,
+  sepia: true,
+  maxZoomLevel: 0,
+};

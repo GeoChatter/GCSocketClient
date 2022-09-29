@@ -1,85 +1,93 @@
-import { z } from "zod"
+import { z } from "zod";
 
-import { MapGameEndResult, MapGameSettings, MapOptions, MapRoundResult, MapRoundSettings  } from "../index";
+import {
+  MapGameEndResult,
+  MapGameSettings,
+  MapOptions,
+  MapRoundResult,
+  MapRoundSettings,
+} from "../index";
 import fakeGameEndResults from "./fakeGameEndResults";
 import fakeGameSettings from "./fakeGameSettings";
-import fakeMapOptions from "./fakeMapOptions"
+import fakeMapOptions from "./fakeMapOptions";
 import fakeRoundInfo from "./fakeRoundInfo";
 import fakeRoundResults from "./fakeRoundResults";
 
 export class MockConnectionBuilder {
+  constructor() {
+    console.log("using MockConnectionBuilder");
+  }
 
-    constructor() {
-        console.log("using MockConnectionBuilder")
-    }
+  registeredHandlers: { [key: string]: (data?: unknown) => void } = {};
 
-    registeredHandlers: { [key: string]: (data?: unknown) => void; } = {}
+  connection = {
+    state: "Closed",
 
-    connection = {
-        state: "Closed",
+    start: () => {
+      console.log("started")
+      this.connection.state = "Connected";
+    },
+    stop: () => {
+      this.connection.onclose(new Error("mock error"));
+      this.connection.state = "Closed";
+      console.log("connection closed");
+    },
+    on: (method: string, func: (data: unknown) => void) => {
+      this.registeredHandlers[method] = func;
+    },
 
-        start: () => {this.connection.state = "Connected" },
-        stop: () => {
-            this.connection.onclose(new Error("mock error"))
-            this.connection.state = "Closed"
-            console.log("connection closed")
-        },
-        on: (method: string, func: (data: unknown) => void) => {
-            this.registeredHandlers[method] = func
-        },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onclose: (e: Error) => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onreconnecting: (e: Error) => {
+    },
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onclose: (e: Error) => {
-         },
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onreconnecting: (e: Error) => { },
+    invoke: (
+      method: string,
+      args: unknown
+    ): z.infer<typeof MapOptions> | void => {
+      if (method === "MapLogin") {
+        // FIXME: RETURN REAL DATA HERE SOME DAY
+        return this.mapOptions;
+      }
+    },
+  };
 
+  withUrl(_url: string, _: any) {
+    return {
+      build: () => this.connection,
+    };
+  }
 
-        invoke: (method: string, args: unknown): (z.infer<typeof MapOptions> | void) => {
-            if (method === "MapLogin") {
-                // FIXME: RETURN REAL DATA HERE SOME DAY
-                return this.mapOptions
-            }
-        }
+  startGame = () => {
+    this.registeredHandlers.StartGame(this.mapGameSettings);
+  };
 
-    }
+  sendMapOptions = () => {
+    this.registeredHandlers.MapOptions(this.mapOptions);
+  };
 
-    withUrl(_url: string, _: any) {
-        return {
-            build: () => this.connection
-        }
-    }
+  startRound = () => {
+    this.registeredHandlers.StartRound(this.mapRoundSettings);
+  };
+  endRound = () => {
+    this.registeredHandlers.EndRound(this.mapRoundResult);
+  };
 
-    startGame = () => {
-        this.registeredHandlers.StartGame(this.mapGameSettings)
-    }
+  endGame = () => {
+    this.registeredHandlers.EndGame(this.mapGameEndResult);
+  };
+  exitGame = () => {
+    this.registeredHandlers.ExitGame();
+  };
 
-    sendMapOptions = () => {
-        this.registeredHandlers.MapOptions(this.mapOptions)
-    }
+  mapOptions = fakeMapOptions as z.infer<typeof MapOptions>;
 
-    startRound = () => {
-        this.registeredHandlers.StartRound(this.mapRoundSettings)
-    }
-    endRound = () => {
-        this.registeredHandlers.EndRound(this.mapRoundResult)
-    }
+  mapGameSettings = fakeGameSettings as z.infer<typeof MapGameSettings>;
 
-    endGame = () => {
-        this.registeredHandlers.EndGame(this.mapGameEndResult)
-    }
-    exitGame = () => { 
-        this.registeredHandlers.ExitGame()
-    }
+  mapRoundResult: z.infer<typeof MapRoundResult> = fakeRoundResults;
 
-    mapOptions  = fakeMapOptions as z.infer<typeof MapOptions>
+  mapGameEndResult: z.infer<typeof MapGameEndResult> = fakeGameEndResults;
 
-    mapGameSettings  = fakeGameSettings as z.infer<typeof MapGameSettings>
-
-
-    mapRoundResult: z.infer<typeof MapRoundResult> =  fakeRoundResults
-
-    mapGameEndResult: z.infer<typeof MapGameEndResult> = fakeGameEndResults
-
-    mapRoundSettings: z.infer<typeof MapRoundSettings> = fakeRoundInfo 
+  mapRoundSettings: z.infer<typeof MapRoundSettings> = fakeRoundInfo;
 }

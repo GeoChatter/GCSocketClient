@@ -1,4 +1,4 @@
-import * as signalR from '@microsoft/signalr';
+import * as signalR from "@microsoft/signalr";
 import { z } from "zod";
 import { MockConnectionBuilder } from "./mock/MockConnectionBuilder";
 export { z, MockConnectionBuilder };
@@ -34,7 +34,7 @@ export declare class GCSocketClient {
      * It returns the value of the private variable _streamerCode.
      * @returns The streamerCode property is being returned.
      */
-    get streamerCode(): (string);
+    get streamerCode(): string;
     /**
      * It stops the connection to the SignalR hub.
      */
@@ -69,6 +69,19 @@ export declare class GCSocketClient {
      * @param {Flag} data - Flag - This is the data that will be sent to the server.
      */
     sendColor(data: z.infer<typeof Color>): Promise<void>;
+    /**
+     * It gets the user stats for a given channel and twitch id.
+     * @param {string} channelName - The name of the channel you want to get the stats for.
+     * @param {number} twitchId - The Twitch ID of the user you want to get stats for.
+     * @returns A promise that resolves to a StatsPlayer or undefined.
+     */
+    getUserStats(channelName: string, twitchId: number): Promise<z.infer<typeof StatsPlayer> | undefined>;
+    /**
+     * It returns the channel stats for a given channel name.
+     * @param {string} channelName - The name of the channel you want to get the stats of.
+     * @returns A promise that resolves to a ChannelStats object or undefined.
+     */
+    channelStats(channelName: string): Promise<z.infer<typeof ChannelStats> | undefined>;
 }
 export declare const SendingBase: z.ZodObject<{
     bot: z.ZodString;
@@ -203,6 +216,8 @@ export declare const MapOptions: z.ZodObject<{
     showFlags: z.ZodBoolean;
     showBorders: z.ZodBoolean;
     showStreamOverlay: z.ZodBoolean;
+    isInRound: z.ZodBoolean;
+    isInGame: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
     mapIdentifier?: string | undefined;
     botname?: string | null | undefined;
@@ -215,6 +230,8 @@ export declare const MapOptions: z.ZodObject<{
     showFlags: boolean;
     showBorders: boolean;
     showStreamOverlay: boolean;
+    isInRound: boolean;
+    isInGame: boolean;
 }, {
     mapIdentifier?: string | undefined;
     botname?: string | null | undefined;
@@ -227,48 +244,50 @@ export declare const MapOptions: z.ZodObject<{
     showFlags: boolean;
     showBorders: boolean;
     showStreamOverlay: boolean;
+    isInRound: boolean;
+    isInGame: boolean;
 }>;
 export declare const MapGameSettings: z.ZodObject<{
-    mapID: z.ZodNumber;
+    mapID: z.ZodString;
     mapName: z.ZodString;
-    forbidMoving: z.ZodBoolean;
-    forbidRotating: z.ZodBoolean;
-    forbidZooming: z.ZodBoolean;
-    roundCount: z.ZodNumber;
-    gameMode: z.ZodString;
-    gameType: z.ZodString;
-    gameState: z.ZodString;
-    isStreak: z.ZodBoolean;
     isInfinite: z.ZodBoolean;
+    isStreak: z.ZodBoolean;
+    gameType: z.ZodString;
+    gameMode: z.ZodString;
+    gameState: z.ZodString;
+    roundCount: z.ZodNumber;
     timeLimit: z.ZodNumber;
+    forbidMoving: z.ZodBoolean;
+    forbidZooming: z.ZodBoolean;
+    forbidRotating: z.ZodBoolean;
     streakType: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     gameMode: string;
-    mapID: number;
+    mapID: string;
     mapName: string;
-    forbidMoving: boolean;
-    forbidRotating: boolean;
-    forbidZooming: boolean;
-    roundCount: number;
+    isInfinite: boolean;
+    isStreak: boolean;
     gameType: string;
     gameState: string;
-    isStreak: boolean;
-    isInfinite: boolean;
+    roundCount: number;
     timeLimit: number;
+    forbidMoving: boolean;
+    forbidZooming: boolean;
+    forbidRotating: boolean;
     streakType: string;
 }, {
     gameMode: string;
-    mapID: number;
+    mapID: string;
     mapName: string;
-    forbidMoving: boolean;
-    forbidRotating: boolean;
-    forbidZooming: boolean;
-    roundCount: number;
+    isInfinite: boolean;
+    isStreak: boolean;
     gameType: string;
     gameState: string;
-    isStreak: boolean;
-    isInfinite: boolean;
+    roundCount: number;
     timeLimit: number;
+    forbidMoving: boolean;
+    forbidZooming: boolean;
+    forbidRotating: boolean;
     streakType: string;
 }>;
 export declare const PlayerBase: z.ZodObject<{
@@ -418,12 +437,158 @@ export declare const MapRoundSettings: z.ZodObject<{
     roundNumber: z.ZodNumber;
     isMultiGuess: z.ZodBoolean;
     startTime: z.ZodString;
+    layers: z.ZodArray<z.ZodString, "many">;
+    is3dEnabled: z.ZodBoolean;
+    blackAndWhite: z.ZodBoolean;
+    blurry: z.ZodBoolean;
+    mirrored: z.ZodBoolean;
+    upsideDown: z.ZodBoolean;
+    sepia: z.ZodBoolean;
+    maxZoomLevel: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
+    layers: string[];
+    is3dEnabled: boolean;
+    blackAndWhite: boolean;
+    blurry: boolean;
+    mirrored: boolean;
+    upsideDown: boolean;
+    sepia: boolean;
+    maxZoomLevel: number;
 }, {
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
+    layers: string[];
+    is3dEnabled: boolean;
+    blackAndWhite: boolean;
+    blurry: boolean;
+    mirrored: boolean;
+    upsideDown: boolean;
+    sepia: boolean;
+    maxZoomLevel: number;
+}>;
+export declare const StatsPlayer: z.ZodObject<{
+    id: z.ZodNumber;
+    channel: z.ZodString;
+    twitchId: z.ZodString;
+    playerName: z.ZodString;
+    playerFlag: z.ZodString;
+    playerFlagName: z.ZodString;
+    countryStreak: z.ZodNumber;
+    bestStreak: z.ZodNumber;
+    correctCountries: z.ZodNumber;
+    numberOfCountries: z.ZodNumber;
+    wins: z.ZodNumber;
+    perfects: z.ZodNumber;
+    overallAverage: z.ZodNumber;
+    bestGame: z.ZodNumber;
+    bestRound: z.ZodNumber;
+    sumOfGuesses: z.ZodNumber;
+    totalDistance: z.ZodNumber;
+    lastGuess: z.ZodString;
+    noOfGuesses: z.ZodNumber;
+    noOf5kGuesses: z.ZodNumber;
+    displayName: z.ZodString;
+    profilePictureUrl: z.ZodString;
+    color: z.ZodString;
+    isBanned: z.ZodBoolean;
+    modified: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    id: number;
+    displayName: string;
+    playerFlagName: string;
+    playerFlag: string;
+    color: string;
+    channel: string;
+    twitchId: string;
+    playerName: string;
+    countryStreak: number;
+    bestStreak: number;
+    correctCountries: number;
+    numberOfCountries: number;
+    wins: number;
+    perfects: number;
+    overallAverage: number;
+    bestGame: number;
+    bestRound: number;
+    sumOfGuesses: number;
+    totalDistance: number;
+    lastGuess: string;
+    noOfGuesses: number;
+    noOf5kGuesses: number;
+    profilePictureUrl: string;
+    isBanned: boolean;
+    modified: string;
+}, {
+    id: number;
+    displayName: string;
+    playerFlagName: string;
+    playerFlag: string;
+    color: string;
+    channel: string;
+    twitchId: string;
+    playerName: string;
+    countryStreak: number;
+    bestStreak: number;
+    correctCountries: number;
+    numberOfCountries: number;
+    wins: number;
+    perfects: number;
+    overallAverage: number;
+    bestGame: number;
+    bestRound: number;
+    sumOfGuesses: number;
+    totalDistance: number;
+    lastGuess: string;
+    noOfGuesses: number;
+    noOf5kGuesses: number;
+    profilePictureUrl: string;
+    isBanned: boolean;
+    modified: string;
+}>;
+export declare const ChannelStats: z.ZodObject<{
+    averageName: z.ZodString;
+    averageSum: z.ZodNumber;
+    averageCount: z.ZodNumber;
+    bestStreak: z.ZodNumber;
+    bestStreakName: z.ZodString;
+    bestRound: z.ZodNumber;
+    bestRoundName: z.ZodString;
+    noOf5kGuesses: z.ZodNumber;
+    noOf5kGuessesName: z.ZodString;
+    wins: z.ZodNumber;
+    winsName: z.ZodString;
+    perfects: z.ZodNumber;
+    perfectsName: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    bestStreak: number;
+    wins: number;
+    perfects: number;
+    bestRound: number;
+    noOf5kGuesses: number;
+    averageName: string;
+    averageSum: number;
+    averageCount: number;
+    bestStreakName: string;
+    bestRoundName: string;
+    noOf5kGuessesName: string;
+    winsName: string;
+    perfectsName: string;
+}, {
+    bestStreak: number;
+    wins: number;
+    perfects: number;
+    bestRound: number;
+    noOf5kGuesses: number;
+    averageName: string;
+    averageSum: number;
+    averageCount: number;
+    bestStreakName: string;
+    bestRoundName: string;
+    noOf5kGuessesName: string;
+    winsName: string;
+    perfectsName: string;
 }>;

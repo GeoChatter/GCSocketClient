@@ -12,7 +12,7 @@ export declare class MockConnectionBuilder {
         on: (method: string, func: (data: unknown) => void) => void;
         onclose: (e: Error) => void;
         onreconnecting: (e: Error) => void;
-        invoke: (method: string, args: unknown) => (z.infer<typeof MapOptions> | void);
+        invoke: (method: string, args: unknown) => z.infer<typeof MapOptions> | void;
     };
     withUrl(_url: string, _: any): {
         build: () => {
@@ -34,6 +34,8 @@ export declare class MockConnectionBuilder {
                 showFlags: boolean;
                 showBorders: boolean;
                 showStreamOverlay: boolean;
+                isInRound: boolean;
+                isInGame: boolean;
             };
         };
     };
@@ -55,20 +57,22 @@ export declare class MockConnectionBuilder {
         showFlags: boolean;
         showBorders: boolean;
         showStreamOverlay: boolean;
+        isInRound: boolean;
+        isInGame: boolean;
     };
     mapGameSettings: {
         gameMode: string;
-        mapID: number;
+        mapID: string;
         mapName: string;
-        forbidMoving: boolean;
-        forbidRotating: boolean;
-        forbidZooming: boolean;
-        roundCount: number;
+        isInfinite: boolean;
+        isStreak: boolean;
         gameType: string;
         gameState: string;
-        isStreak: boolean;
-        isInfinite: boolean;
+        roundCount: number;
         timeLimit: number;
+        forbidMoving: boolean;
+        forbidZooming: boolean;
+        forbidRotating: boolean;
         streakType: string;
     };
     mapRoundResult: z.infer<typeof MapRoundResult>;
