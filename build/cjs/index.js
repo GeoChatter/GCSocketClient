@@ -11383,7 +11383,7 @@ var MapRoundSettings = mod.object({
   roundNumber: mod.number(),
   isMultiGuess: mod.boolean(),
   startTime: mod.string(),
-  layers: mod.array(mod.string()),
+  layers: mod.array(mod.string()).nullish(),
   is3dEnabled: mod.boolean(),
   blackAndWhite: mod.boolean(),
   blurry: mod.boolean(),

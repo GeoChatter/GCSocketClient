@@ -580,7 +580,7 @@ export const MapRoundSettings = z.object({
     roundNumber: z.number(),
     isMultiGuess: z.boolean(),
     startTime: z.string(),
-    layers: z.array(z.string()),
+    layers: z.array(z.string()).nullish(),
     is3dEnabled: z.boolean(),
     blackAndWhite: z.boolean(),
     blurry: z.boolean(),

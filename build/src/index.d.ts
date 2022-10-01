@@ -437,7 +437,7 @@ export declare const MapRoundSettings: z.ZodObject<{
     roundNumber: z.ZodNumber;
     isMultiGuess: z.ZodBoolean;
     startTime: z.ZodString;
-    layers: z.ZodArray<z.ZodString, "many">;
+    layers: z.ZodNullable<z.ZodOptional<z.ZodArray<z.ZodString, "many">>>;
     is3dEnabled: z.ZodBoolean;
     blackAndWhite: z.ZodBoolean;
     blurry: z.ZodBoolean;
@@ -446,10 +446,10 @@ export declare const MapRoundSettings: z.ZodObject<{
     sepia: z.ZodBoolean;
     maxZoomLevel: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
+    layers?: string[] | null | undefined;
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
-    layers: string[];
     is3dEnabled: boolean;
     blackAndWhite: boolean;
     blurry: boolean;
@@ -458,10 +458,10 @@ export declare const MapRoundSettings: z.ZodObject<{
     sepia: boolean;
     maxZoomLevel: number;
 }, {
+    layers?: string[] | null | undefined;
     roundNumber: number;
     isMultiGuess: boolean;
     startTime: string;
-    layers: string[];
     is3dEnabled: boolean;
     blackAndWhite: boolean;
     blurry: boolean;
