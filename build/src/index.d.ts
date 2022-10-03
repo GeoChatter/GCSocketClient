@@ -92,17 +92,17 @@ export declare const SendingBase: z.ZodObject<{
     display: z.ZodString;
     pic: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
 }, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -122,9 +122,9 @@ export declare const Guess: z.ZodObject<z.extendShape<{
     isTemporary: z.ZodBoolean;
     isRandom: z.ZodBoolean;
 }>, "strip", z.ZodTypeAny, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -134,9 +134,9 @@ export declare const Guess: z.ZodObject<z.extendShape<{
     isTemporary: boolean;
     isRandom: boolean;
 }, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -157,18 +157,18 @@ export declare const Flag: z.ZodObject<z.extendShape<{
 }, {
     flag: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
     flag: string;
 }, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -186,18 +186,18 @@ export declare const Color: z.ZodObject<z.extendShape<{
 }, {
     color: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
     pic: string;
     color: string;
 }, {
-    id: string;
     bot: string;
     tkn: string;
+    id: string;
     name: string;
     sourcePlatform: "YouTube" | "Twitch";
     display: string;
@@ -497,10 +497,10 @@ export declare const StatsPlayer: z.ZodObject<{
     isBanned: z.ZodBoolean;
     modified: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    id: number;
     displayName: string;
     playerFlagName: string;
     playerFlag: string;
+    id: number;
     color: string;
     channel: string;
     twitchId: string;
@@ -523,10 +523,10 @@ export declare const StatsPlayer: z.ZodObject<{
     isBanned: boolean;
     modified: string;
 }, {
-    id: number;
     displayName: string;
     playerFlagName: string;
     playerFlag: string;
+    id: number;
     color: string;
     channel: string;
     twitchId: string;
